@@ -1,0 +1,2791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Surcan Beauty Selebration - Kupon Undian & Lucky Draw</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6.6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <!-- QRCode.js (Library Utility) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Html5-Qrcode Kamera Scanner -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- SheetJS (xlsx) untuk Export dan Import Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            display: ['Quicksand', 'sans-serif'],
+          },
+          colors: {
+            nusantaraRed: '#f43f5e',
+            nusantaraGold: '#f59e0b',
+            nusantaraNavy: '#1e293b',
+            nusantaraCream: '#fffbf7',
+            nusantaraPink: '#fff1f2',
+            brand: {
+              pink: {
+                light: '#FFD1E6',
+                DEFAULT: '#FF64B4',
+                dark: '#E03D93',
+              },
+              purple: {
+                light: '#E6D5FF',
+                DEFAULT: '#9F55FF',
+                dark: '#7A22E5',
+              }
+            }
+          },
+          boxShadow: {
+            'premium': '0 12px 40px -12px rgba(244, 63, 94, 0.12)',
+            'cute': '0 10px 25px -5px rgba(244, 63, 94, 0.12), 0 8px 10px -6px rgba(244, 63, 94, 0.04)',
+            'button': '0 8px 24px -6px rgba(244, 63, 94, 0.45)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); }
+    ::-webkit-scrollbar-thumb { background: #fecdd3; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fda4af; }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f43f5e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 14px;
+      padding-right: 40px !important;
+    }
+    select:disabled {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23cbd5e1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+    }
+
+    .slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .btn-active:active { transform: scale(0.96); filter: brightness(0.96); }
+
+    .clean-draw-card {
+      background-color: #ffffff;
+      border: 1px solid #f3e8ff;
+      box-shadow: 0 10px 25px -5px rgba(217, 70, 239, 0.06), 0 8px 10px -6px rgba(168, 85, 247, 0.03);
+    }
+    .clean-slot-box {
+      background: linear-gradient(135deg, #fdf4ff 0%, #ffffff 50%, #fff1f2 100%);
+      border: 2px solid #e9d5ff;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-rose-100 selection:text-rose-600 bg-[#fffaf6]">
+
+  <script>
+    const CONFIG = {
+      EVENT_NAME: "Surcan Beauty Selebration",
+      BASE_URL: window.location.origin + window.location.pathname,
+      WHATSAPP_ADMIN: "6285117693637",
+      SUPABASE_URL: "https://ohtjcgarcbcbclpfywwj.supabase.co",
+      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9odGpjZ2FyY2JjYmNscGZ5d3dqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExOTAxMzEsImV4cCI6MjEwNjc2NjEzMX0.Ac8RsBp7l_FdNKCjy_ZfdzrpcnB6qlgDgYHJy78lrmA"
+    };
+
+    const supabaseClient = window.supabase ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+  </script>
+
+  <nav class="hidden w-full bg-white/85 backdrop-blur-md border-b border-rose-100/70 sticky top-0 z-40 transition-all shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center text-white shadow-sm font-extrabold text-base">
+          S
+        </div>
+        <div>
+          <h1 class="font-extrabold text-sm text-slate-800 leading-tight tracking-tight">Surya Cantik</h1>
+          <p class="text-[10px] text-rose-500 font-bold uppercase tracking-wider">Beauty Selebration</p>
+        </div>
+      </a>
+
+      <!-- Menu Hash Links -->
+      <div class="flex items-center gap-1 sm:gap-2">
+        <a href="#" id="navLinkDaftar" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
+          <i class="fa-solid fa-id-card mr-1"></i> <span class="hidden sm:inline">Daftar</span>
+        </a>
+        <a href="#sukses" id="navLinkSukses" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500" title="Contoh Kupon Berhasil">
+          <i class="fa-solid fa-ticket mr-1"></i> <span class="hidden sm:inline">Contoh</span>
+        </a>
+        <a href="#petugas" id="navLinkPetugas" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
+          <i class="fa-solid fa-qrcode mr-1"></i> <span class="hidden sm:inline">Petugas</span>
+        </a>
+        <a href="#pengaturan" id="navLinkPengaturan" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
+          <i class="fa-solid fa-gear mr-1"></i> <span class="hidden sm:inline">Pengaturan</span>
+        </a>
+        <a href="#dashboard" id="navLinkDashboard" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
+          <i class="fa-solid fa-chart-line mr-1"></i> <span class="hidden sm:inline">Dashboard</span>
+        </a>
+        <a href="#undian" id="navLinkUndian" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-sm hover:opacity-90">
+          <i class="fa-solid fa-gift mr-1 animate-bounce"></i> <span>Lucky Draw</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6">
+    <div class="bg-white/95 rounded-3xl p-8 max-w-xs w-full text-center shadow-2xl border border-rose-100 flex flex-col items-center">
+      <div class="relative w-20 h-20 mb-4 flex items-center justify-center">
+        <div class="absolute inset-0 border-4 border-rose-100 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-t-rose-500 border-r-transparent rounded-full animate-spin"></div>
+        <i class="fa-solid fa-sparkles text-2xl text-rose-500"></i>
+      </div>
+      <h3 class="text-base font-extrabold text-slate-800 mb-1">Memproses Data</h3>
+      <p id="loadingText" class="text-xs text-slate-400 font-medium leading-relaxed">Menghubungkan ke server Supabase...</p>
+    </div>
+  </div>
+
+  <div id="customModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-all border border-rose-50">
+      <div id="modalIconHeader" class="h-20 flex items-center justify-center text-white relative bg-rose-500">
+        <div id="modalIconWrapper" class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+          <i id="modalIcon" class="fa-solid fa-circle-check"></i>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 id="modalTitle" class="text-base font-extrabold text-slate-800 mb-1.5">Pemberitahuan</h3>
+        <p id="modalMessage" class="text-xs text-slate-500 leading-relaxed mb-6 font-medium">Pesan notifikasi.</p>
+        <button id="modalBtnClose" onclick="closeCustomModal()" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="duplicateUserModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2.25rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all border border-rose-100">
+      <div class="h-20 flex items-center justify-center text-white relative bg-gradient-to-r from-amber-500 to-rose-500 shadow-inner">
+        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+          <i class="fa-solid fa-id-card-clip"></i>
+        </div>
+      </div>
+      <div class="p-6 text-center space-y-4">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-800">Nomor WhatsApp Sudah Terdaftar</h3>
+          <p class="text-[11px] text-slate-400 mt-1 font-semibold leading-relaxed">Nomor WhatsApp ini sudah tercatat sebelumnya di sistem undian.</p>
+        </div>
+
+        <div class="bg-rose-50/40 p-4 rounded-2xl border border-rose-100 text-left space-y-2 text-xs">
+          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
+            <span class="text-slate-400 font-bold">Nama</span>
+            <span id="dupNama" class="font-extrabold text-slate-800 uppercase text-right">--</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
+            <span class="text-slate-400 font-bold">Nomor WA</span>
+            <span id="dupWhatsapp" class="font-extrabold text-slate-800">--</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
+            <span class="text-rose-500 font-bold">Nomor Undian</span>
+            <span id="dupKode" class="font-black text-rose-600 bg-white px-2 py-0.5 rounded-lg border border-rose-200">--</span>
+          </div>
+          <div class="flex justify-between items-center pt-0.5">
+            <span class="text-slate-400 font-bold">Tanggal Mendaftar</span>
+            <span id="dupTanggal" class="font-extrabold text-slate-700 text-right">--</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <button id="dupBtnViewTicket" onclick="openExistingTicketFromModal()" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-ticket"></i> Buka Kupon Undian Saya
+          </button>
+          <button onclick="closeDuplicateModal()" class="btn-active w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl text-xs transition">
+            Mengerti & Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="customConfirmModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2.25rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all border border-rose-100">
+      <div class="h-20 flex items-center justify-center text-white relative bg-gradient-to-r from-rose-500 to-rose-600 shadow-inner">
+        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+      </div>
+      <div class="p-6 text-center space-y-4">
+        <div>
+          <h3 id="confirmDialogTitle" class="text-base font-extrabold text-slate-800">Konfirmasi</h3>
+          <p id="confirmDialogMessage" class="text-xs text-slate-500 mt-1.5 font-medium leading-relaxed">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5 pt-2">
+          <button type="button" onclick="closeConfirmDialog()" class="btn-active w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl text-xs transition">
+            Batal
+          </button>
+          <button type="button" id="btnConfirmDialogAction" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button">
+            Ya, Lanjutkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- 1. HALAMAN PENDAFTARAN & TIKET (#)                     -->
+  <!-- ======================================================= -->
+  <section id="pageDaftar" class="slide-up max-w-lg mx-auto w-full px-4 py-6 flex-grow">
+    
+    <!-- Wrapper Form Registrasi -->
+    <div id="wrapperFormDaftar" class="bg-white/95 rounded-[2.5rem] shadow-cute border border-rose-100/60 overflow-hidden">
+      <!-- Header Banner Gambar (Baner.png) -->
+      <div class="w-full overflow-hidden border-b border-rose-100/60 bg-rose-50/30">
+        <img src="Baner.png" alt="Festival Belanja Surya Cantik" class="w-full h-auto object-cover block" onerror="this.onerror=null; this.src='https://placehold.co/600x250/fff1f2/f43f5e?text=Surcan+Beauty+Selebration';">
+      </div>
+
+      <form id="formPendaftaran" class="p-6 space-y-5" onsubmit="handleRegistration(event)">
+        <!-- Input Nama Lengkap -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            Nama Lengkap <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="inputNama" required minlength="3" placeholder="Masukkan nama lengkap..."
+            class="w-full h-12 px-4 rounded-2xl border border-rose-100 bg-rose-50/20 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
+        </div>
+
+        <!-- Input Nomor WhatsApp -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            Nomor WhatsApp <span class="text-rose-500">*</span>
+          </label>
+          <input type="tel" id="inputWhatsapp" required placeholder="Contoh: 081234567890"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            class="w-full h-12 px-4 rounded-2xl border border-rose-100 bg-rose-50/20 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
+          <p class="text-[10px] text-slate-400 font-medium">Harus berawalan '08' dan minimal 10 digit.</p>
+        </div>
+
+        <!-- Tanggal Lahir (Dropdowns) -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            Tanggal Lahir <span class="text-rose-500">*</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2">
+            <select id="selectTanggal" required class="h-12 px-3 rounded-2xl border border-rose-100 bg-rose-50/20 text-xs text-slate-700"></select>
+            <select id="selectBulan" required class="h-12 px-2 rounded-2xl border border-rose-100 bg-rose-50/20 text-xs text-slate-700">
+              <option value="" disabled selected>Bulan</option>
+              <option value="01">Januari</option>
+              <option value="02">Februari</option>
+              <option value="03">Maret</option>
+              <option value="04">April</option>
+              <option value="05">Mei</option>
+              <option value="06">Juni</option>
+              <option value="07">Juli</option>
+              <option value="08">Agustus</option>
+              <option value="09">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
+            </select>
+            <select id="selectTahun" required class="h-12 px-3 rounded-2xl border border-rose-100 bg-rose-50/20 text-xs text-slate-700"></select>
+          </div>
+          <input type="hidden" id="inputTanggalLahir">
+        </div>
+
+        <!-- Usia Otomatis -->
+        <div id="wrapperUsia" class="hidden bg-rose-50/50 p-3 rounded-2xl border border-rose-100 flex justify-between items-center text-xs">
+          <span class="text-slate-500 font-bold"><i class="fa-solid fa-clock-rotate-left mr-1 text-rose-500"></i> Usia Anda:</span>
+          <span id="labelUsia" class="font-extrabold text-rose-600 bg-white px-3 py-1 rounded-xl shadow-sm">-- Tahun</span>
+        </div>
+
+        <!-- Jenis Kelamin -->
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            Jenis Kelamin <span class="text-rose-500">*</span>
+          </label>
+          <select id="inputJenisKelamin" required class="w-full h-12 px-4 rounded-2xl border border-rose-100 bg-rose-50/20 text-sm">
+            <option value="" disabled selected>Pilih Jenis Kelamin</option>
+            <option value="Perempuan">Perempuan</option>
+            <option value="Laki-laki">Laki-laki</option>
+          </select>
+        </div>
+
+        <!-- Wilayah Domisili (Cascading) -->
+        <div class="space-y-3 pt-2 border-t border-rose-50">
+          <label class="block text-[11px] font-extrabold text-rose-500 uppercase tracking-widest">
+            <i class="fa-solid fa-map-pin mr-1"></i> Wilayah Domisili
+          </label>
+          <div class="space-y-2.5">
+            <select id="selectProvinsi" onchange="onProvinsiChanged()" required class="w-full h-11 px-3.5 rounded-xl border border-rose-100 text-xs"></select>
+            <select id="selectKabupaten" onchange="onKabupatenChanged()" required disabled class="w-full h-11 px-3.5 rounded-xl border border-rose-100 text-xs disabled:bg-slate-50">
+              <option value="" disabled selected>Pilih Kabupaten/Kota</option>
+            </select>
+            <select id="selectKecamatan" onchange="onKecamatanChanged()" required disabled class="w-full h-11 px-3.5 rounded-xl border border-rose-100 text-xs disabled:bg-slate-50">
+              <option value="" disabled selected>Pilih Kecamatan</option>
+            </select>
+            <select id="selectKelurahan" required disabled class="w-full h-11 px-3.5 rounded-xl border border-rose-100 text-xs disabled:bg-slate-50">
+              <option value="" disabled selected>Pilih Desa/Kelurahan</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SYARAT PENDAFTARAN (4 SYARAT: IG, TIKTOK, WA CHANNEL, GOOGLE MAPS) -->
+        <div class="pt-4 border-t border-rose-50 space-y-3">
+          <div>
+            <h4 class="text-xs font-extrabold text-slate-800 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-heart text-rose-500"></i> Lengkapi Syarat Pendaftaran
+            </h4>
+            <p class="text-[10px] text-slate-400 font-medium mt-0.5">Ketuk tombol di bawah dan ikuti media sosial resmi Surya Cantik:</p>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <!-- 1. IG Surya Cantik ID -->
+            <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center">
+                  <i class="fa-brands fa-instagram text-sm"></i>
+                </div>
+                <div>
+                  <h5 class="font-extrabold text-slate-800 text-[11px]">@suryacantik.id</h5>
+                </div>
+              </div>
+              <button type="button" onclick="openInstagramApp()" id="btn_ig_stk"
+                class="btn-active bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl shadow-sm transition">Follow</button>
+            </div>
+
+            <!-- 2. TikTok @suryacantiksay -->
+            <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center">
+                  <i class="fa-brands fa-tiktok text-sm"></i>
+                </div>
+                <div>
+                  <h5 class="font-extrabold text-slate-800 text-[11px]">@suryacantiksay</h5>
+                </div>
+              </div>
+              <a href="https://www.tiktok.com/@suryacantiksay?_r=1&_t=ZS-99MTICIUzMQ" target="_blank" onclick="markSocialOpened('tiktok_stk')" id="btn_tiktok_stk"
+                class="btn-active bg-black hover:bg-slate-800 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl shadow-sm transition">Follow</a>
+            </div>
+
+            <!-- 3. Saluran WA -->
+            <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
+                  <i class="fa-brands fa-whatsapp text-sm"></i>
+                </div>
+                <div>
+                  <h5 class="font-extrabold text-slate-800 text-[11px]">Saluran WhatsApp</h5>
+                  <p class="text-[9px] text-slate-400">Surya Cantik Official</p>
+                </div>
+              </div>
+              <a href="https://whatsapp.com/channel/0029VbBZzgC9mrGhrSZtpw0C" target="_blank" onclick="markSocialOpened('wa_channel')" id="btn_wa_channel"
+                class="btn-active bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl shadow-sm transition">Join</a>
+            </div>
+
+            <!-- 4. Review Google Maps Langsung Bintang 5 -->
+            <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-rose-500 text-white flex items-center justify-center">
+                  <i class="fa-solid fa-star text-sm"></i>
+                </div>
+                <div>
+                  <h5 class="font-extrabold text-slate-800 text-[11px]">Review Surya Cantik ⭐⭐⭐⭐⭐</h5>
+                  <p class="text-[9px] text-slate-400">Beri bintang 5 & ulasan positif di Google Maps</p>
+                </div>
+              </div>
+              <button type="button" onclick="openMapsReviewApp()" id="btn_maps_review"
+                class="btn-active bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl shadow-sm transition">Review</button>
+            </div>
+          </div>
+
+          <label class="flex items-start gap-2.5 p-3.5 bg-rose-50/40 rounded-2xl border border-dashed border-rose-200 cursor-pointer">
+            <input type="checkbox" id="checkSosmed" onchange="toggleSubmitButton()" class="mt-0.5 w-4 h-4 accent-rose-500 rounded">
+            <span class="text-xs text-slate-600 font-semibold leading-relaxed">
+              Saya menyatakan telah mengikuti seluruh akun, saluran, dan memberikan ulasan bintang 5 resmi Surya Cantik di atas.
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnDaftar" disabled
+          class="btn-active w-full h-12 bg-slate-200 text-slate-400 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-not-allowed">
+          <i class="fa-solid fa-ticket"></i> Daftar & Dapatkan Kupon
+        </button>
+      </form>
+    </div>
+
+    <!-- TAMPILAN KUPON SETELAH DAFTAR (TICKET VIEW LANGSUNG AKTIF) -->
+    <div id="wrapperTicketView" class="hidden bg-white/95 rounded-[2.5rem] shadow-cute border border-rose-100 overflow-hidden text-center p-6 space-y-5">
+      <div>
+        <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mx-auto mb-2 border border-emerald-100 shadow-sm animate-bounce">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-800">Kupon Undian</h3>
+        <p class="text-xs text-slate-400 font-medium mt-0.5">Pendaftaran Berhasil! Kupon Anda telah resmi berstatus aktif.</p>
+      </div>
+
+      <!-- Detail Kartu Kupon Utama -->
+      <div class="p-5 rounded-2xl bg-rose-50/40 border border-rose-100 text-left space-y-2.5 text-xs">
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Nama</span>
+          <span id="ticketNama" class="font-extrabold text-slate-800 uppercase text-right">--</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Nomor WA</span>
+          <span id="ticketWhatsapp" class="font-extrabold text-slate-800">--</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Domisili</span>
+          <span id="ticketWilayah" class="font-extrabold text-slate-800 text-right">--</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2 items-center">
+          <span class="text-rose-500 font-bold">Nomor Undian Utama</span>
+          <span id="ticketKode" class="font-black text-lg text-rose-600 bg-white px-2.5 py-0.5 rounded-lg border border-rose-200 font-mono shadow-sm">--</span>
+        </div>
+        <div class="flex justify-between items-center pt-0.5">
+          <span class="text-slate-400 font-bold">Status Kupon</span>
+          <span id="ticketStatus" class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-emerald-100 text-emerald-700 border border-emerald-200">AKTIF ✓</span>
+        </div>
+      </div>
+
+      <!-- KOTAK INFORMASI UNDIAN (RESMI) -->
+      <div class="p-5 rounded-2xl bg-gradient-to-br from-rose-50/70 via-pink-50/40 to-white border border-rose-200/80 text-left space-y-3.5 shadow-sm text-xs">
+        <div class="font-black text-rose-600 flex items-center gap-1.5 text-sm uppercase">
+          <i class="fa-solid fa-gift animate-bounce"></i> INFORMASI UNDIAN
+        </div>
+        <p class="text-slate-700 font-bold leading-relaxed">
+          Undian akan dilaksanakan secara langsung di Toko Surya Cantik pada:
+        </p>
+        <div class="space-y-1.5 text-slate-700 font-bold pl-1 bg-white/80 p-3 rounded-xl border border-rose-100">
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-calendar-days"></i></span>
+            <span>Minggu, 11 Oktober 2026</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-clock"></i></span>
+            <span>Pukul 17.00 WIB – selesai</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-location-dot"></i></span>
+            <span>Toko Surya Cantik</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1 border-t border-rose-100">
+          <div class="font-black text-slate-800 flex items-center gap-1.5 uppercase text-[11px]">
+            <i class="fa-solid fa-trophy text-amber-500"></i> Ketentuan Pemenang
+          </div>
+          <p class="text-slate-600 font-semibold">Pemenang undian dinyatakan sah apabila:</p>
+          <ul class="space-y-1.5 text-slate-600 font-medium pl-1">
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Wajib hadir langsung di Toko Surya Cantik saat pengundian.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Menunjukkan kupon undian atau bukti pendaftaran berhasil kepada panitia.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Pemenang yang tidak hadir atau tidak dapat menunjukkan bukti pendaftaran/kupon undian dinyatakan tidak memenuhi syarat sebagai pemenang.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="pt-2 border-t border-rose-100 text-center">
+          <p class="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 py-1.5 px-3 rounded-xl border border-emerald-200">
+            Undian ini GRATIS dan tidak dipungut biaya.
+          </p>
+        </div>
+        <p class="text-[10px] text-slate-400 font-semibold text-center">✨ Jangan sampai ketinggalan! Hadir dan menangkan hadiahnya.</p>
+      </div>
+
+      <button onclick="shareTicketToWA()" class="btn-active w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-2">
+        <i class="fa-brands fa-whatsapp text-base"></i> Kirim Bukti ke WhatsApp Admin
+      </button>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 1.1 HALAMAN CONTOH PENDAFTARAN BERHASIL (#sukses)        -->
+  <!-- ======================================================= -->
+  <section id="pageSukses" class="hidden slide-up max-w-lg mx-auto w-full px-4 py-6 flex-grow">
+    <div class="bg-white/95 rounded-[2.5rem] shadow-cute border border-rose-100 overflow-hidden text-center p-6 space-y-5">
+      <!-- Badge / Header Contoh Halaman -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-extrabold uppercase tracking-wider mx-auto">
+        <i class="fa-solid fa-eye text-amber-500"></i> Contoh Tampilan Pendaftaran Berhasil
+      </div>
+
+      <div>
+        <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mx-auto mb-2 border border-emerald-100 shadow-sm animate-bounce">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-800">Kupon Undian</h3>
+        <p class="text-xs text-slate-400 font-medium mt-0.5">Pendaftaran Berhasil! Simpan kupon ini atau kirim ke WhatsApp Admin sebagai bukti keikutsertaan Anda.</p>
+      </div>
+
+      <!-- Detail Kartu Kupon Utama (Sampel) -->
+      <div class="p-5 rounded-2xl bg-rose-50/40 border border-rose-100 text-left space-y-2.5 text-xs">
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Nama</span>
+          <span class="font-extrabold text-slate-800 uppercase text-right">Siti Nurhaliza</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Nomor WA</span>
+          <span class="font-extrabold text-slate-800">081234567890</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Domisili</span>
+          <span class="font-extrabold text-slate-800 text-right">Sumbersari, Kabupaten Jember, Jawa Timur</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2 items-center">
+          <span class="text-rose-500 font-bold">Nomor Undian Utama</span>
+          <span class="font-black text-lg text-rose-600 bg-white px-2.5 py-0.5 rounded-lg border border-rose-200 font-mono shadow-sm">STK-10028</span>
+        </div>
+        <div class="flex justify-between items-center pt-0.5">
+          <span class="text-slate-400 font-bold">Status Kupon</span>
+          <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-emerald-100 text-emerald-700 border border-emerald-200">AKTIF ✓</span>
+        </div>
+      </div>
+
+      <!-- KOTAK INFORMASI UNDIAN (RESMI) -->
+      <div class="p-5 rounded-2xl bg-gradient-to-br from-rose-50/70 via-pink-50/40 to-white border border-rose-200/80 text-left space-y-3.5 shadow-sm text-xs">
+        <div class="font-black text-rose-600 flex items-center gap-1.5 text-sm uppercase">
+          <i class="fa-solid fa-gift animate-bounce"></i> INFORMASI UNDIAN
+        </div>
+        <p class="text-slate-700 font-bold leading-relaxed">
+          Undian akan dilaksanakan secara langsung di Toko Surya Cantik pada:
+        </p>
+        <div class="space-y-1.5 text-slate-700 font-bold pl-1 bg-white/80 p-3 rounded-xl border border-rose-100">
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-calendar-days"></i></span>
+            <span>Minggu, 11 Oktober 2026</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-clock"></i></span>
+            <span>Pukul 17.00 WIB – selesai</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 text-center text-rose-500"><i class="fa-solid fa-location-dot"></i></span>
+            <span>Toko Surya Cantik</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-1 border-t border-rose-100">
+          <div class="font-black text-slate-800 flex items-center gap-1.5 uppercase text-[11px]">
+            <i class="fa-solid fa-trophy text-amber-500"></i> Ketentuan Pemenang
+          </div>
+          <p class="text-slate-600 font-semibold">Pemenang undian dinyatakan sah apabila:</p>
+          <ul class="space-y-1.5 text-slate-600 font-medium pl-1">
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Wajib hadir langsung di Toko Surya Cantik saat pengundian.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Menunjukkan kupon undian atau bukti pendaftaran berhasil kepada panitia.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i class="fa-solid fa-circle-check text-rose-500 mt-1 flex-shrink-0 text-[10px]"></i>
+              <span>Pemenang yang tidak hadir atau tidak dapat menunjukkan bukti pendaftaran/kupon undian dinyatakan tidak memenuhi syarat sebagai pemenang.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="pt-2 border-t border-rose-100 text-center">
+          <p class="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 py-1.5 px-3 rounded-xl border border-emerald-200">
+            Undian ini GRATIS dan tidak dipungut biaya.
+          </p>
+        </div>
+        <p class="text-[10px] text-slate-400 font-semibold text-center">✨ Jangan sampai ketinggalan! Hadir dan menangkan hadiahnya.</p>
+      </div>
+
+      <!-- Tombol Aksi Simulasi -->
+      <div class="space-y-2 pt-1">
+        <a href="https://wa.me/6285117693637?text=Halo%20Admin%20Surya%20Cantik%20%F0%9F%98%8A%20Saya%20sudah%20mendaftar%20kupon%20undian%20Surcan%20Beauty%20Selebration!%0A%0ANama%3A%20Siti%20Nurhaliza%0Ano.%20WA%20%3A%20081234567890%0ANomor%20Undian%3A%20STK-10028" target="_blank" class="btn-active w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-2">
+          <i class="fa-brands fa-whatsapp text-base"></i> Kirim Bukti ke WhatsApp Admin
+        </a>
+        <a href="#" class="btn-active w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl text-xs transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-arrow-left"></i> Kembali ke Form Pendaftaran
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 2. HALAMAN PETUGAS: SCANNER & VALIDASI KUPON (#petugas)  -->
+  <!-- ======================================================= -->
+  <section id="pagePetugas" class="hidden slide-up max-w-lg mx-auto w-full px-4 py-6 flex-grow">
+    <div class="bg-white/95 rounded-[2.5rem] shadow-cute border border-rose-100 overflow-hidden">
+      <div class="bg-slate-800 text-white p-5 flex justify-between items-center">
+        <div>
+          <h3 class="text-sm font-extrabold flex items-center gap-2">
+            <i class="fa-solid fa-qrcode text-amber-400"></i> Validasi Kupon Petugas
+          </h3>
+          <p class="text-[10px] text-slate-400 mt-0.5 font-semibold">Khusus Petugas Toko Surya Cantik</p>
+        </div>
+        <i class="fa-solid fa-shield-check text-rose-400 text-xl"></i>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <!-- Identitas Petugas -->
+        <div class="p-4 bg-rose-50/20 border border-rose-100 rounded-2xl space-y-2">
+          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Identitas Petugas</label>
+          <div class="flex gap-2">
+            <input type="text" id="officerName" placeholder="Masukkan nama petugas..."
+              class="flex-grow h-11 px-3.5 text-xs rounded-xl border border-rose-100 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200">
+            <button onclick="saveOfficer()" class="btn-active px-4 h-11 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow-sm">
+              Simpan
+            </button>
+          </div>
+          <p id="officerStatusText" class="text-[10px] text-slate-400 font-semibold"></p>
+        </div>
+
+        <!-- PANEL VALIDASI -->
+        <div class="space-y-5">
+          <div id="scannerSection" class="hidden space-y-3">
+            <div class="overflow-hidden bg-black rounded-3xl border-2 border-slate-700 min-h-[240px]">
+              <div id="interactiveScanner" class="w-full"></div>
+            </div>
+            <button onclick="stopCamera()" class="btn-active w-full h-11 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-video-slash"></i> Tutup Kamera
+            </button>
+          </div>
+
+          <div id="btnStartCameraContainer">
+            <button onclick="startCamera()" class="btn-active w-full h-12 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-2">
+              <i class="fa-solid fa-camera"></i> Buka Kamera Scanner
+            </button>
+          </div>
+
+          <div class="border-t border-rose-50 pt-4 space-y-2.5">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Atau Input Kode Kupon Manual</label>
+            <div class="flex gap-2">
+              <input type="text" id="manualCode" placeholder="STK-10001"
+                class="flex-grow h-11 px-4 text-xs font-mono uppercase rounded-xl border border-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-200">
+              <button onclick="submitManualActivation()" class="btn-active px-4 h-11 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow-sm">
+                Cek / Validasi
+              </button>
+            </div>
+          </div>
+
+          <div id="scanResultCard" class="hidden p-4 rounded-2xl text-center space-y-1.5">
+            <i id="scanResultIcon" class="w-10 h-10 rounded-full mx-auto flex items-center justify-center text-lg"></i>
+            <h4 id="scanResultTitle" class="font-extrabold text-sm">--</h4>
+            <p id="scanResultDesc" class="text-xs font-semibold text-slate-600">--</p>
+            <button onclick="resetScannerUI()" class="btn-active mt-2 px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-[11px] rounded-lg">
+              Siap Scan Lagi
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 2.5 HALAMAN PENGATURAN: FILTER INTERNAL UNDIAN (#pengaturan) -->
+  <!-- ======================================================= -->
+  <section id="pagePengaturan" class="hidden slide-up max-w-lg mx-auto w-full px-4 py-6 flex-grow">
+    <div class="bg-white/95 rounded-[2.5rem] shadow-cute border border-purple-100 overflow-hidden">
+      <div class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-5 flex justify-between items-center">
+        <div>
+          <h3 class="text-sm font-extrabold flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-amber-400"></i> Pengaturan Undian Internal
+          </h3>
+          <p class="text-[10px] text-purple-200 mt-0.5 font-semibold">Khusus Manajemen & Petugas Toko</p>
+        </div>
+        <i class="fa-solid fa-gears text-purple-300 text-xl"></i>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <div class="p-4 bg-purple-50/40 border border-purple-200 rounded-2xl space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="pr-2">
+              <span class="block text-xs font-black text-purple-900 uppercase">Aktifkan Filter Tanggal</span>
+              <p class="text-[10px] text-slate-500 font-medium">Hanya kupon dari tanggal tertentu yang dapat terpilih sebagai pemenang.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+              <input type="checkbox" id="checkFilterUndianTanggal" onchange="toggleOfficerDateFilter(this.checked)" class="sr-only peer">
+              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            </label>
+          </div>
+
+          <div id="officerDateFilterInputs" class="space-y-3 pt-2 border-t border-purple-100 hidden">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Dari Tanggal</label>
+                <input type="date" id="filterUndianStart" class="w-full h-10 px-3 text-xs rounded-xl border border-purple-200 bg-white font-semibold">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase">Sampai Tanggal</label>
+                <input type="date" id="filterUndianEnd" class="w-full h-10 px-3 text-xs rounded-xl border border-purple-200 bg-white font-semibold">
+              </div>
+            </div>
+            <button type="button" onclick="saveOfficerDateFilter()" class="btn-active w-full h-10 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-floppy-disk"></i> Terapkan Pengaturan Undian
+            </button>
+          </div>
+
+          <div class="p-3 bg-white/80 rounded-xl border border-purple-100 text-[11px] text-slate-600 flex items-start gap-2">
+            <i class="fa-solid fa-circle-info text-purple-600 mt-0.5"></i>
+            <span>Pengaturan ini bersifat internal. Di layar publik Lucky Draw, semua kupon tetap terlihat berputar secara acak untuk menjaga integritas acara.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 3. HALAMAN DASHBOARD ADMIN (#dashboard)                 -->
+  <!-- ======================================================= -->
+  <section id="pageDashboard" class="hidden slide-up max-w-7xl mx-auto w-full px-4 py-6 flex-grow relative">
+    
+    <div id="dashboardAuthOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-30 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-7 max-w-sm w-full shadow-2xl border border-rose-100 text-center space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 mx-auto flex items-center justify-center text-xl shadow-sm">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-base text-slate-800">Autentikasi Dashboard</h3>
+          <p class="text-xs text-slate-400 mt-0.5 font-semibold">Masukkan kata sandi admin untuk mengakses data.</p>
+        </div>
+        <form onsubmit="handleDashboardLogin(event)" class="space-y-3">
+          <input type="password" id="inputDashboardPassword" placeholder="Kata Sandi Admin..." required
+            class="w-full h-11 px-4 text-xs rounded-xl border border-rose-100 bg-rose-50/20 focus:outline-none focus:ring-2 focus:ring-rose-200">
+          <p id="authErrorMsg" class="hidden text-[11px] text-rose-500 font-bold">Kata sandi tidak sesuai!</p>
+          <button type="submit" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs transition shadow-button">
+            Buka Dashboard
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-rose-100/60 mb-5">
+      <div class="relative w-full">
+        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" id="dashboardSearch" oninput="filterDashboardData()" placeholder="Cari nama, WhatsApp, nomor undian, domisili..."
+          class="w-full h-10 pl-9 pr-3 text-xs rounded-xl border border-rose-100 bg-rose-50/20 focus:outline-none focus:ring-2 focus:ring-rose-200">
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-sm border border-rose-100/60 overflow-hidden">
+      <div class="overflow-x-auto max-h-[550px]">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-rose-50/50 text-slate-600 font-extrabold sticky top-0 z-10 border-b border-rose-100 whitespace-nowrap">
+            <tr>
+              <th class="p-3 text-center">
+                <input type="checkbox" id="checkSelectAll" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
+              </th>
+              <th class="p-3 text-center">No.</th>
+              <th class="p-3">Tanggal Daftar</th>
+              <th class="p-3">Nama Pelanggan</th>
+              <th class="p-3">WhatsApp</th>
+              <th class="p-3">Tgl Lahir</th>
+              <th class="p-3">Gender</th>
+              <th class="p-3">Provinsi</th>
+              <th class="p-3">Kabupaten/Kota</th>
+              <th class="p-3">Kecamatan</th>
+              <th class="p-3">Desa/Kelurahan</th>
+              <th class="p-3">Nomor Undian</th>
+              <th class="p-3">Status Kupon</th>
+              <th class="p-3">Waktu Aktivasi</th>
+              <th class="p-3 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="dashboardTableBody" class="divide-y divide-rose-50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal Edit Peserta -->
+    <div id="editParticipantModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-rose-100 space-y-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+          <h4 class="font-extrabold text-sm text-slate-800">Edit Data Peserta</h4>
+          <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="formEditParticipant" onsubmit="saveEditedParticipant(event)" class="space-y-3 text-xs">
+          <input type="hidden" id="editId">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Nomor Undian Utama</label>
+            <input type="text" id="editKodeUndian" readonly class="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 font-mono font-bold text-rose-600">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Nama Pelanggan</label>
+            <input type="text" id="editNama" required class="w-full h-10 px-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-rose-200">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Nomor WhatsApp</label>
+            <input type="text" id="editWhatsapp" required class="w-full h-10 px-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-rose-200">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Tanggal Lahir</label>
+              <input type="date" id="editTanggalLahir" class="w-full h-10 px-3 rounded-xl border border-rose-100 focus:ring-2 focus:ring-rose-200">
+            </div>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Jenis Kelamin</label>
+              <select id="editJenisKelamin" class="w-full h-10 px-3 rounded-xl border border-rose-100">
+                <option value="Perempuan">Perempuan</option>
+                <option value="Laki-laki">Laki-laki</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Provinsi</label>
+              <input type="text" id="editProvinsi" class="w-full h-10 px-3 rounded-xl border border-rose-100">
+            </div>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Kabupaten/Kota</label>
+              <input type="text" id="editKabupaten" class="w-full h-10 px-3 rounded-xl border border-rose-100">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Kecamatan</label>
+              <input type="text" id="editKecamatan" class="w-full h-10 px-3 rounded-xl border border-rose-100">
+            </div>
+            <div>
+              <label class="block text-slate-400 font-bold mb-1">Desa/Kelurahan</label>
+              <input type="text" id="editDesa" class="w-full h-10 px-3 rounded-xl border border-rose-100">
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Status Kupon Utama</label>
+            <select id="editStatusAktivasi" onchange="onEditStatusChanged()" class="w-full h-10 px-3 rounded-xl border border-rose-100 font-bold">
+              <option value="AKTIF" selected>AKTIF</option>
+              <option value="BELUM AKTIF">BELUM AKTIF</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Waktu Aktivasi</label>
+            <input type="datetime-local" id="editWaktuAktivasi" class="w-full h-10 px-3 rounded-xl border border-rose-100 bg-slate-50 text-[11px]">
+            <input type="hidden" id="editPetugasAktivasi">
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button type="button" onclick="closeEditModal()" class="flex-1 h-11 bg-slate-100 text-slate-600 rounded-xl font-bold">Batal</button>
+            <button type="submit" class="flex-1 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold shadow-sm">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 4. HALAMAN UNDIAN: LUCKY DRAW 10 HADIAH (#undian)       -->
+  <!-- ======================================================= -->
+  <section id="pageUndian" class="hidden slide-up flex-grow flex flex-col justify-between bg-gradient-to-b from-[#fdf4ff] via-[#fffaf6] to-[#faf5ff] text-slate-800 py-6">
+    <main class="w-full max-w-7xl mx-auto px-4 flex-grow flex flex-col lg:flex-row gap-6 items-stretch justify-center">
+      <!-- KIRI: Mesin Pengundian -->
+      <div class="flex-grow flex flex-col justify-between gap-5 lg:w-3/5">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-pink-100 text-pink-700 text-xs font-bold uppercase tracking-wider mb-2 border border-pink-200">
+            <i class="fa-solid fa-sparkles text-pink-500"></i> Undian Eksklusif Surya Cantik
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
+            Surya Cantik Lucky Draw
+          </h2>
+          <!-- Indikator Hadiah & Ketentuan Undian -->
+          <div class="mt-2.5 flex flex-wrap items-center gap-2 text-xs font-bold">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-purple-50 border border-purple-200 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
+              <span class="text-purple-700 font-extrabold" id="currentPrizeLabel">SEDANG MENGUNDI: HADIAH KE-10</span>
+            </div>
+            <button type="button" onclick="openRulesModal()" class="btn-active px-3 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-700 text-[11px] font-extrabold flex items-center gap-1.5 shadow-sm transition">
+              <i class="fa-solid fa-circle-info text-pink-500"></i> Ketentuan Lucky Draw
+            </button>
+            <button type="button" onclick="openDrawSettingsModal()" class="btn-active px-3.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 text-[11px] font-extrabold flex items-center gap-1.5 shadow-sm transition" title="Pengaturan Durasi Undian">
+              <i class="fa-solid fa-gear text-purple-600"></i> <span id="labelDurationBtn">Durasi: 10 Detik</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Frame Mesin Undian Tema Terang -->
+        <div class="clean-draw-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center shadow-md">
+          <div class="clean-slot-box w-full py-10 px-6 rounded-2xl flex flex-col items-center justify-center min-h-[220px] shadow-inner">
+            <div id="displayNumber" class="text-4xl sm:text-6xl md:text-7xl font-black tracking-widest font-mono mb-2 text-center break-all select-none bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
+              STK-XXXXX
+            </div>
+            <div id="displayName" class="text-base sm:text-xl font-extrabold text-slate-800 capitalize truncate max-w-full text-center">
+              Siap Memulai Undian
+            </div>
+            <div id="pulseIcon" class="mt-4 px-3.5 py-1 rounded-full bg-white border border-purple-200 text-purple-700 text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Sistem Standby
+            </div>
+          </div>
+
+          <!-- Tombol Aksi Mulai Undian Gradasi Pink-Ungu -->
+          <div class="w-full max-w-md mt-6">
+            <button id="btnStartDraw" onclick="startLuckyDraw()" class="btn-active w-full h-13 py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 hover:opacity-95 text-white font-extrabold tracking-wider text-sm shadow-button transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-play"></i> <span>MULAI UNDIAN</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrik Kupon Aktif & Sisa Kandidat -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="clean-draw-card rounded-2xl p-3.5">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Kupon Aktif</span>
+            <div id="statTotalPeserta" class="text-xl sm:text-2xl font-black text-purple-600 mt-0.5">0</div>
+          </div>
+          <div class="clean-draw-card rounded-2xl p-3.5">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Belum Aktif</span>
+            <div id="statBelumAktif" class="text-xl sm:text-2xl font-black text-rose-500 mt-0.5">0</div>
+          </div>
+          <div class="clean-draw-card rounded-2xl p-3.5">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sisa Kandidat</span>
+            <div id="statSisaKandidat" class="text-xl sm:text-2xl font-black text-pink-500 mt-0.5">0</div>
+          </div>
+          <div class="clean-draw-card rounded-2xl p-3.5">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pemenang</span>
+            <div id="statTotalPemenang" class="text-xl sm:text-2xl font-black text-amber-500 mt-0.5">0 / 10</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KANAN: Daftar Log Pemenang (10 Hadiah) -->
+      <div class="lg:w-2/5 flex flex-col">
+        <div class="clean-draw-card rounded-3xl p-5 flex flex-col h-full shadow-md">
+          <div class="flex justify-between items-center pb-3 border-b border-purple-100 mb-3">
+            <h3 class="font-extrabold tracking-wide text-xs sm:text-sm text-purple-700 flex items-center gap-2">
+              <i class="fa-solid fa-trophy text-amber-500"></i> DAFTAR PEMENANG (10 HADIAH)
+            </h3>
+            <button onclick="clearAllWinners()" class="text-[10px] text-rose-500 hover:text-rose-600 font-bold flex items-center gap-1 transition">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+          </div>
+
+          <div id="winnersListContainer" class="flex-1 overflow-y-auto max-h-[580px] space-y-2 pr-1 text-xs"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- MODAL PEMENANG -->
+    <div id="winnerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-md rounded-3xl p-6 text-center border border-purple-100 shadow-2xl relative overflow-hidden">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white mx-auto mb-3 flex items-center justify-center text-2xl shadow-md">
+          <i class="fa-solid fa-crown animate-bounce"></i>
+        </div>
+        <h4 class="text-xs uppercase tracking-widest text-purple-600 font-black" id="modalPrizeTitle">HADIAH KE-10</h4>
+        
+        <div class="my-4 p-5 rounded-2xl bg-gradient-to-br from-pink-50/50 to-purple-50/50 border border-purple-200/70">
+          <div id="modalWinnerNumber" class="text-3xl sm:text-4xl font-black font-mono text-pink-600 tracking-wider">STK-10001</div>
+          <div id="modalWinnerName" class="text-lg font-extrabold text-slate-800 mt-1.5 capitalize">Nama Pemenang</div>
+          <div id="modalWinnerWa" class="text-xs text-purple-700 mt-1 font-mono font-bold">08123456789</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-5">
+          <button onclick="discardWinner()" class="btn-active h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+            <i class="fa-solid fa-ban mr-1"></i> Hangus
+          </button>
+          <button onclick="saveCurrentWinner()" class="btn-active h-11 bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-95 text-white rounded-xl font-bold text-xs shadow-md transition">
+            <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Pemenang
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL KETENTUAN LUCKY DRAW -->
+    <div id="rulesModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-7 border border-purple-100 shadow-2xl relative max-h-[90vh] overflow-y-auto space-y-4 text-left">
+        <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-ticket-simple"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-extrabold text-slate-800">Ketentuan Lucky Draw</h3>
+              <p class="text-[10px] text-purple-600 font-bold uppercase tracking-wider">Surcan Beauty Selebration</p>
+            </div>
+          </div>
+          <button onclick="closeRulesModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-600 space-y-3 font-medium leading-relaxed">
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-purple-50/50 border border-purple-100">
+            <i class="fa-solid fa-circle-check text-purple-600 mt-0.5 flex-shrink-0"></i>
+            <span>Hanya kupon undian yang <strong>berstatus aktif</strong> yang berhak mengikuti pengundian.</span>
+          </div>
+
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-pink-50/50 border border-pink-100">
+            <i class="fa-solid fa-gift text-pink-600 mt-0.5 flex-shrink-0"></i>
+            <span>Tersedia <strong>10 hadiah</strong> yang akan diundi secara terpisah, mulai dari <strong>Hadiah ke-10 hingga Hadiah ke-1 (Hadiah Utama)</strong>.</span>
+          </div>
+
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-amber-50/60 border border-amber-200/70">
+            <i class="fa-solid fa-ban text-amber-600 mt-0.5 flex-shrink-0"></i>
+            <div>
+              <p class="font-bold text-amber-900">Ketentuan Peserta Hangus:</p>
+              <p class="mt-1 text-slate-700">Apabila seorang peserta terpilih sebagai pemenang pada suatu hadiah namun dinyatakan <strong>hangus/tidak memenuhi ketentuan</strong>, maka peserta tersebut <strong>tidak dapat mengikuti pengundian untuk hadiah-hadiah berikutnya</strong> (gugur dari seluruh putaran undian).</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+            <i class="fa-solid fa-user-check text-slate-700 mt-0.5 flex-shrink-0"></i>
+            <span><strong>Setiap peserta hanya dapat memenangkan 1 (satu) hadiah.</strong> Setelah peserta dinyatakan sebagai pemenang sah salah satu hadiah, maka nomor kupon maupun nomor WhatsApp yang sama tidak dapat memenangkan hadiah lainnya.</span>
+          </div>
+        </div>
+
+        <button onclick="closeRulesModal()" class="btn-active w-full h-11 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl text-xs transition shadow-sm">
+          Mengerti Ketentuan
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL PENGATURAN DURASI UNDIAN -->
+    <div id="drawSettingsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-sm rounded-3xl p-6 border border-purple-100 shadow-2xl space-y-4 text-left">
+        <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">
+              <i class="fa-solid fa-gear"></i>
+            </div>
+            <h3 class="text-sm font-extrabold text-slate-800">Pengaturan Undian</h3>
+          </div>
+          <button onclick="closeDrawSettingsModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-bold text-slate-700">Durasi Pengundian (Detik):</label>
+          <div class="relative">
+            <input type="number" id="inputDrawDuration" min="1" max="120" step="1" value="10"
+              class="w-full h-11 px-3.5 pr-14 text-sm font-bold rounded-xl border border-purple-200 bg-purple-50/20 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-400">
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 pointer-events-none">Detik</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-2">
+          <button type="button" onclick="closeDrawSettingsModal()" class="btn-active h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition">
+            Batal
+          </button>
+          <button type="button" onclick="saveDrawDuration()" class="btn-active h-10 bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-95 text-white font-bold rounded-xl text-xs shadow-sm transition">
+            Simpan Durasi
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white/80 border-t border-rose-100/50 text-[10px] text-center py-4 text-slate-400 font-semibold">
+    <p>&copy; 2026 Surya Cantik. All Rights Reserved. Operational Development.</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    let allParticipants = [];
+    let allWinners = [];
+    let currentDrawingCandidate = null;
+    let isDrawingRunning = false;
+    let html5QrScanner = null;
+    let selectedParticipantIds = new Set();
+    let isDashboardAuthenticated = false;
+    let currentActiveTicketData = null;
+    let currentDuplicateRecord = null;
+
+    let drawDurationSeconds = parseInt(localStorage.getItem('stk_draw_duration') || '10', 10);
+    if (isNaN(drawDurationSeconds) || drawDurationSeconds < 1) drawDurationSeconds = 10;
+
+    let activeConfirmCallback = null;
+    let allDiscardedCodes = new Set(JSON.parse(localStorage.getItem('stk_discarded_codes') || '[]'));
+    let allDiscardedWhatsapps = new Set(JSON.parse(localStorage.getItem('stk_discarded_whatsapps') || '[]'));
+
+    let localVerificationStatus = {
+      ig_stk: false,
+      tiktok_stk: false,
+      wa_channel: false,
+      maps_review: false
+    };
+
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSpinTick(pitch = 700, vol = 0.08) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(pitch, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    function playVictoryFanfare() {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const playTone = (freq, start, duration, type = 'triangle', vol = 0.18) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(vol, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + duration - 0.02);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + duration);
+        };
+        playTone(523.25, now, 0.12, 'triangle', 0.2);
+        playTone(659.25, now + 0.12, 0.12, 'triangle', 0.2);
+        playTone(783.99, now + 0.24, 0.14, 'triangle', 0.22);
+        playTone(1046.50, now + 0.38, 0.65, 'triangle', 0.28);
+      } catch (e) {}
+    }
+
+    function playHangusSound() {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(260, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(95, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.14, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initDOBDropdowns();
+      loadProvinces();
+      handleHashNavigation();
+      window.addEventListener('hashchange', handleHashNavigation);
+      checkUrlForTicket();
+      updateDurationButtonLabel();
+
+      const savedSosmed = localStorage.getItem('suryacantik_sosmed_clicks');
+      if (savedSosmed) {
+        try {
+          localVerificationStatus = Object.assign(localVerificationStatus, JSON.parse(savedSosmed));
+          updateSocialButtonsVisual();
+        } catch (e) {}
+      }
+
+      const savedOfficer = localStorage.getItem('suryacantik_officer_name');
+      if (savedOfficer) {
+        const officerInput = document.getElementById('officerName');
+        if (officerInput) officerInput.value = savedOfficer;
+        updateOfficerStatus(savedOfficer);
+      }
+    });
+
+    async function checkUrlForTicket() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('t');
+      if (token) {
+        showLoading(true, "Memuat kupon undian Anda...");
+        try {
+          const { data, error } = await supabaseClient
+            .from('peserta_event')
+            .select('*')
+            .eq('public_token', token)
+            .maybeSingle();
+          if (error) throw error;
+          if (data) renderSuccessTicket(data);
+        } catch (err) {
+          console.warn("Gagal membuka kupon dari token URL:", err);
+        } finally {
+          showLoading(false);
+        }
+      }
+    }
+
+    function handleHashNavigation() {
+      const hash = window.location.hash || '';
+      hideAllPages();
+
+      const navLinks = ['Daftar', 'Sukses', 'Petugas', 'Pengaturan', 'Dashboard', 'Undian'];
+      navLinks.forEach(item => {
+        const el = document.getElementById(`navLink${item}`);
+        if (el && item !== 'Undian') el.classList.remove('text-rose-500', 'bg-rose-50');
+      });
+
+      if (hash === '#sukses') {
+        const pSukses = document.getElementById('pageSukses');
+        if (pSukses) pSukses.classList.remove('hidden');
+        const navSukses = document.getElementById('navLinkSukses');
+        if (navSukses) navSukses.classList.add('text-rose-500', 'bg-rose-50');
+      } else if (hash === '#petugas') {
+        const pPetugas = document.getElementById('pagePetugas');
+        if (pPetugas) pPetugas.classList.remove('hidden');
+        const navPetugas = document.getElementById('navLinkPetugas');
+        if (navPetugas) navPetugas.classList.add('text-rose-500', 'bg-rose-50');
+      } else if (hash === '#pengaturan') {
+        const pPengaturan = document.getElementById('pagePengaturan');
+        if (pPengaturan) pPengaturan.classList.remove('hidden');
+        const navPengaturan = document.getElementById('navLinkPengaturan');
+        if (navPengaturan) navPengaturan.classList.add('text-rose-500', 'bg-rose-50');
+        initOfficerDateFilterUI();
+      } else if (hash === '#dashboard') {
+        const pDashboard = document.getElementById('pageDashboard');
+        if (pDashboard) pDashboard.classList.remove('hidden');
+        const navDashboard = document.getElementById('navLinkDashboard');
+        if (navDashboard) navDashboard.classList.add('text-rose-500', 'bg-rose-50');
+        if (!isDashboardAuthenticated) {
+          const overlay = document.getElementById('dashboardAuthOverlay');
+          if (overlay) overlay.classList.remove('hidden');
+        } else {
+          loadDashboardData();
+        }
+      } else if (hash === '#undian') {
+        const pUndian = document.getElementById('pageUndian');
+        if (pUndian) pUndian.classList.remove('hidden');
+        loadLuckyDrawCandidates();
+      } else {
+        const pDaftar = document.getElementById('pageDaftar');
+        if (pDaftar) pDaftar.classList.remove('hidden');
+        const navDaftar = document.getElementById('navLinkDaftar');
+        if (navDaftar) navDaftar.classList.add('text-rose-500', 'bg-rose-50');
+      }
+    }
+
+    function hideAllPages() {
+      ['pageDaftar', 'pageSukses', 'pagePetugas', 'pagePengaturan', 'pageDashboard', 'pageUndian'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      stopCamera();
+    }
+
+    function showLoading(show, message = "") {
+      const overlay = document.getElementById('loadingOverlay');
+      const text = document.getElementById('loadingText');
+      if (text && message) text.innerText = message;
+      if (overlay) overlay.classList.toggle('hidden', !show);
+    }
+
+    function showNotification(title, message, type = 'info') {
+      const modal = document.getElementById('customModal');
+      const titleEl = document.getElementById('modalTitle');
+      const msgEl = document.getElementById('modalMessage');
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerHTML = message;
+      const header = document.getElementById('modalIconHeader');
+      const icon = document.getElementById('modalIcon');
+
+      if (header && icon) {
+        if (type === 'success') {
+          header.className = "h-20 flex items-center justify-center text-white relative bg-emerald-500";
+          icon.className = "fa-solid fa-circle-check";
+        } else if (type === 'error') {
+          header.className = "h-20 flex items-center justify-center text-white relative bg-rose-500";
+          icon.className = "fa-solid fa-triangle-exclamation";
+        } else {
+          header.className = "h-20 flex items-center justify-center text-white relative bg-slate-800";
+          icon.className = "fa-solid fa-circle-info";
+        }
+      }
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCustomModal() {
+      const modal = document.getElementById('customModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function showConfirmDialog(title, message, onConfirm) {
+      const modal = document.getElementById('customConfirmModal');
+      const titleEl = document.getElementById('confirmDialogTitle');
+      const msgEl = document.getElementById('confirmDialogMessage');
+      const actionBtn = document.getElementById('btnConfirmDialogAction');
+
+      if (!modal) return;
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerHTML = message;
+      activeConfirmCallback = onConfirm;
+
+      if (actionBtn) {
+        actionBtn.onclick = async () => {
+          const callbackToExecute = activeConfirmCallback;
+          closeConfirmDialog();
+          if (typeof callbackToExecute === 'function') {
+            await callbackToExecute();
+          }
+        };
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeConfirmDialog() {
+      const modal = document.getElementById('customConfirmModal');
+      if (modal) modal.classList.add('hidden');
+      activeConfirmCallback = null;
+    }
+
+    function openInstagramApp() {
+      markSocialOpened('ig_stk');
+      const username = 'suryacantik.id';
+      const webUrl = 'https://www.instagram.com/suryacantik.id?igsi=MWF3cGdvbjBkZHNocA==';
+      const isAndroid = /android/i.test(navigator.userAgent);
+      const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      if (isAndroid) {
+        window.location.href = `intent://instagram.com/_u/${username}/#Intent;package=com.instagram.android;scheme=https;end`;
+      } else if (isiOS) {
+        window.location.href = `instagram://user?username=${username}`;
+        setTimeout(() => { window.location.href = webUrl; }, 1500);
+      } else {
+        window.open(webUrl, '_blank');
+      }
+    }
+
+    function openMapsReviewApp() {
+      markSocialOpened('maps_review');
+      const placeId = 'ChIJT3wqmK8Hby4RAWQpvczkc0c';
+      const reviewWebUrl = `https://search.google.com/local/writereview?placeid=${placeId}`;
+      const isAndroid = /android/i.test(navigator.userAgent);
+
+      if (isAndroid) {
+        window.location.href = `intent://search.google.com/local/writereview?placeid=${placeId}#Intent;scheme=https;package=com.google.android.apps.maps;end`;
+        setTimeout(() => { window.location.href = reviewWebUrl; }, 1200);
+      } else {
+        window.open(reviewWebUrl, '_blank');
+      }
+    }
+
+    function markSocialOpened(key) {
+      localVerificationStatus[key] = true;
+      localStorage.setItem('suryacantik_sosmed_clicks', JSON.stringify(localVerificationStatus));
+      updateSocialButtonsVisual();
+      toggleSubmitButton();
+    }
+
+    function updateSocialButtonsVisual() {
+      const keys = ['ig_stk', 'tiktok_stk', 'wa_channel', 'maps_review'];
+      keys.forEach(key => {
+        const btn = document.getElementById(`btn_${key}`);
+        if (btn && localVerificationStatus[key]) {
+          btn.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Selesai';
+          btn.className = "btn-active bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-extrabold py-1.5 px-3.5 rounded-xl transition-all text-center shadow-sm";
+        }
+      });
+    }
+
+    function toggleSubmitButton() {
+      const checkbox = document.getElementById('checkSosmed');
+      const submitBtn = document.getElementById('btnDaftar');
+      if (!submitBtn) return;
+      const allClicked = Object.values(localVerificationStatus).every(status => status === true);
+
+      if (checkbox && checkbox.checked && allClicked) {
+        submitBtn.disabled = false;
+        submitBtn.className = "btn-active w-full h-12 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs transition shadow-button flex items-center justify-center gap-2 cursor-pointer";
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.className = "btn-active w-full h-12 bg-slate-200 text-slate-400 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 cursor-not-allowed";
+      }
+    }
+
+    function initDOBDropdowns() {
+      const tgl = document.getElementById('selectTanggal');
+      const thn = document.getElementById('selectTahun');
+      const bln = document.getElementById('selectBulan');
+      if (!tgl || !thn || !bln) return;
+
+      tgl.innerHTML = '<option value="" disabled selected>Tgl</option>';
+      for (let i = 1; i <= 31; i++) {
+        tgl.innerHTML += `<option value="${String(i).padStart(2, '0')}">${i}</option>`;
+      }
+      thn.innerHTML = '<option value="" disabled selected>Tahun</option>';
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1950; y--) {
+        thn.innerHTML += `<option value="${y}">${y}</option>`;
+      }
+      [tgl, bln, thn].forEach(el => {
+        el.addEventListener('change', () => {
+          const d = tgl.value, m = bln.value, y = thn.value;
+          const inputDOB = document.getElementById('inputTanggalLahir');
+          if (d && m && y) {
+            if (inputDOB) inputDOB.value = `${y}-${m}-${d}`;
+            calculateAge(`${y}-${m}-${d}`);
+          } else {
+            if (inputDOB) inputDOB.value = '';
+            const wrapper = document.getElementById('wrapperUsia');
+            if (wrapper) wrapper.classList.add('hidden');
+          }
+        });
+      });
+    }
+
+    function calculateAge(birthdateStr) {
+      if (!birthdateStr) return;
+      const birthDate = new Date(birthdateStr);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      const wrapper = document.getElementById('wrapperUsia');
+      const label = document.getElementById('labelUsia');
+      if (wrapper && label) {
+        if (age >= 0) {
+          wrapper.classList.remove('hidden');
+          label.innerText = `${age} Tahun`;
+        } else {
+          wrapper.classList.add('hidden');
+        }
+      }
+    }
+
+    async function generateNextTicketNumber() {
+      const START_NUM = 10001;
+      try {
+        const { data, error } = await supabaseClient.from('peserta_event').select('kode_undian');
+        if (error) throw error;
+        
+        const existingNumbers = new Set(
+          (data || []).map(row => {
+            const match = row.kode_undian ? row.kode_undian.match(/^STK-(\d+)$/) : null;
+            return match ? parseInt(match[1], 10) : null;
+          }).filter(Boolean)
+        );
+
+        let target = START_NUM;
+        while (existingNumbers.has(target)) {
+          target++;
+        }
+        return `STK-${target}`;
+      } catch (err) {
+        return `STK-${Date.now().toString().slice(-5)}`;
+      }
+    }
+
+    async function handleRegistration(event) {
+      event.preventDefault();
+
+      const nama = document.getElementById('inputNama').value.trim();
+      const whatsapp = document.getElementById('inputWhatsapp').value.trim();
+
+      if (nama.length < 3) {
+        showNotification("Nama Terlampau Pendek", "Silakan masukkan nama lengkap Anda minimal 3 karakter.", "error");
+        return;
+      }
+
+      if (!whatsapp.startsWith('08')) {
+        showNotification("Nomor WhatsApp Tidak Valid", "Nomor WhatsApp harus berawalan dari <strong>08</strong>.<br>Contoh: <strong>081234567890</strong>", "error");
+        return;
+      }
+
+      if (whatsapp.length < 10) {
+        showNotification("Nomor WhatsApp Kurang", "Nomor WhatsApp minimal terdiri dari <strong>10 digit</strong>.", "error");
+        return;
+      }
+
+      const allSocialClicked = Object.values(localVerificationStatus).every(status => status === true);
+      const checkSosmed = document.getElementById('checkSosmed').checked;
+      if (!allSocialClicked || !checkSosmed) {
+        showNotification("Syarat Belum Lengkap", "Harap ikuti seluruh akun media sosial resmi, review maps, dan centang pernyataan syarat.", "error");
+        return;
+      }
+
+      showLoading(true, "Memeriksa riwayat nomor WhatsApp...");
+
+      try {
+        const { data: existingRecord, error: errWa } = await supabaseClient
+          .from('peserta_event')
+          .select('*')
+          .eq('whatsapp', whatsapp)
+          .maybeSingle();
+
+        if (errWa) throw errWa;
+
+        if (existingRecord) {
+          showLoading(false);
+          currentDuplicateRecord = existingRecord;
+
+          document.getElementById('dupNama').innerText = existingRecord.nama;
+          document.getElementById('dupWhatsapp').innerText = existingRecord.whatsapp;
+          document.getElementById('dupKode').innerText = existingRecord.kode_undian;
+          document.getElementById('dupTanggal').innerText = formatDate(existingRecord.created_at, true);
+
+          document.getElementById('duplicateUserModal').classList.remove('hidden');
+          return;
+        }
+      } catch (err) {
+        console.warn("Gagal mengecek duplikasi WA:", err);
+      }
+
+      showLoading(true, "Menyiapkan kupon undian aktif...");
+
+      const tglLahir = document.getElementById('inputTanggalLahir').value;
+      const jenisKelamin = document.getElementById('inputJenisKelamin').value;
+      const prov = document.getElementById('selectProvinsi').value;
+      const kab = document.getElementById('selectKabupaten').value;
+      const kec = document.getElementById('selectKecamatan').value;
+      const kel = document.getElementById('selectKelurahan').value;
+
+      const nextCode = await generateNextTicketNumber();
+      const publicToken = 'TOK-' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+
+      const payload = {
+        public_token: publicToken,
+        kode_undian: nextCode,
+        nama: nama,
+        whatsapp: whatsapp,
+        tanggal_lahir: tglLahir || null,
+        jenis_kelamin: jenisKelamin,
+        provinsi: prov,
+        kabupaten: kab,
+        kecamatan: kec,
+        desa: kel,
+        status_aktivasi: 'AKTIF',
+        petugas_aktivasi: 'Registrasi Online (Otomatis)',
+        waktu_aktivasi: new Date().toISOString()
+      };
+
+      try {
+        const { data, error } = await supabaseClient.from('peserta_event').insert([payload]).select().single();
+        if (error) throw error;
+
+        showLoading(false);
+        renderSuccessTicket(data);
+        triggerWhatsAppRedirectPopup();
+      } catch (err) {
+        showLoading(false);
+        showNotification("Gagal Pendaftaran", "Kendala Supabase: " + err.message, "error");
+      }
+    }
+
+    function triggerWhatsAppRedirectPopup() {
+      const modal = document.getElementById('customModal');
+      const modalHeader = document.getElementById('modalIconHeader');
+      const modalIconWrapper = document.getElementById('modalIconWrapper');
+      const modalIcon = document.getElementById('modalIcon');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMsg = document.getElementById('modalMessage');
+      const modalBtn = document.getElementById('modalBtnClose');
+
+      if (modalTitle) modalTitle.innerText = "Kupon Undian Aktif!";
+      if (modalHeader) modalHeader.className = "h-20 flex items-center justify-center text-white relative bg-emerald-500 shadow-inner";
+      if (modalIconWrapper) modalIconWrapper.className = "w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl";
+      if (modalIcon) modalIcon.className = "fa-brands fa-whatsapp text-white animate-bounce";
+
+      let secondsLeft = 5;
+      if (modalMsg) {
+        modalMsg.innerHTML = `Pendaftaran sukses! Kupon Anda sudah aktif. Anda akan diarahkan ke WhatsApp Admin dalam <span id="popupCountdown" class="font-extrabold text-base text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">${secondsLeft}</span> detik.`;
+      }
+
+      if (modalBtn) {
+        modalBtn.innerText = "Kirim Sekarang 🚀";
+        modalBtn.className = "btn-active w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs transition shadow-button";
+
+        let countdownInterval;
+        modalBtn.onclick = function() {
+          if (countdownInterval) clearInterval(countdownInterval);
+          closeCustomModal();
+          shareTicketToWA();
+        };
+
+        modal.classList.remove('hidden');
+
+        countdownInterval = setInterval(() => {
+          secondsLeft--;
+          const countElem = document.getElementById('popupCountdown');
+          if (countElem) countElem.innerText = secondsLeft;
+
+          if (secondsLeft <= 0) {
+            clearInterval(countdownInterval);
+            closeCustomModal();
+            shareTicketToWA();
+          }
+        }, 1000);
+      }
+    }
+
+    function safeUpdateUrl(newUrl) {
+      try {
+        if (window.location.protocol !== 'blob:' && window.location.protocol !== 'about:') {
+          window.history.pushState({}, '', newUrl);
+        }
+      } catch (e) {}
+    }
+
+    function openExistingTicketFromModal() {
+      if (currentDuplicateRecord) {
+        const targetRecord = currentDuplicateRecord;
+        closeDuplicateModal();
+        renderSuccessTicket(targetRecord);
+        if (targetRecord.public_token) {
+          safeUpdateUrl(`?t=${targetRecord.public_token}`);
+        }
+      }
+    }
+
+    function closeDuplicateModal() {
+      const modal = document.getElementById('duplicateUserModal');
+      if (modal) modal.classList.add('hidden');
+      currentDuplicateRecord = null;
+    }
+
+    function renderSuccessTicket(data) {
+      if (!data) return;
+      currentActiveTicketData = data;
+      const formWrap = document.getElementById('wrapperFormDaftar');
+      const ticketView = document.getElementById('wrapperTicketView');
+      if (formWrap) formWrap.classList.add('hidden');
+      if (ticketView) ticketView.classList.remove('hidden');
+
+      document.getElementById('ticketNama').innerText = data.nama || '--';
+      document.getElementById('ticketWhatsapp').innerText = data.whatsapp || '--';
+      
+      const partsWilayah = [data.desa, data.kecamatan, data.kabupaten, data.provinsi].filter(Boolean);
+      document.getElementById('ticketWilayah').innerText = partsWilayah.length > 0 ? partsWilayah.join(', ') : '--';
+      
+      document.getElementById('ticketKode').innerText = data.kode_undian || '--';
+
+      const statusEl = document.getElementById('ticketStatus');
+      if (statusEl) {
+        statusEl.innerText = 'AKTIF ✓';
+        statusEl.className = 'px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold bg-emerald-100 text-emerald-700 border border-emerald-200';
+      }
+    }
+
+    function shareTicketToWA() {
+      if (!currentActiveTicketData) return;
+      const data = currentActiveTicketData;
+      const linkTiket = `${CONFIG.BASE_URL}?t=${data.public_token}`;
+
+      const text = `Halo Admin Surya Cantik 😊 Saya sudah mendaftar kupon undian Surcan Beauty Selebration!\n\n` +
+                   `Nama: ${data.nama}\n` +
+                   `no. WA : ${data.whatsapp}\n` +
+                   `Nomor Undian: ${data.kode_undian}\n` +
+                   `Status Kupon: AKTIF ✓\n\n` +
+                   `Berikut link kupon undian saya :\n${linkTiket}`;
+
+      window.location.href = `https://wa.me/${CONFIG.WHATSAPP_ADMIN}?text=${encodeURIComponent(text)}`;
+    }
+
+    function saveOfficer() {
+      const name = document.getElementById('officerName').value.trim();
+      if (!name) return showNotification("Nama Kosong", "Masukkan nama petugas terlebih dahulu.", "error");
+      localStorage.setItem('suryacantik_officer_name', name);
+      updateOfficerStatus(name);
+      showNotification("Berhasil", `Petugas ${name} tersimpan.`, "success");
+    }
+
+    function updateOfficerStatus(name) {
+      const statusEl = document.getElementById('officerStatusText');
+      if (statusEl) {
+        if (name) statusEl.innerHTML = `Petugas Aktif: <span class="font-extrabold text-rose-600">${name}</span>`;
+        else statusEl.innerText = "Belum ada petugas tersimpan.";
+      }
+    }
+
+    function startCamera() {
+      const officer = localStorage.getItem('suryacantik_officer_name');
+      if (!officer) return showNotification("Perhatian", "Simpan nama petugas terlebih dahulu.", "error");
+
+      document.getElementById('btnStartCameraContainer').classList.add('hidden');
+      document.getElementById('scannerSection').classList.remove('hidden');
+
+      Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+          const cameraId = devices.find(d => d.label.toLowerCase().includes('back'))?.id || devices[0].id;
+          html5QrScanner = new Html5Qrcode("interactiveScanner");
+          html5QrScanner.start(cameraId, { fps: 10, qrbox: { width: 220, height: 220 } }, (msg) => {
+            stopCamera();
+            const match = msg.match(/code=([^&]+)/);
+            const code = match ? match[1] : msg.trim().toUpperCase();
+            document.getElementById('manualCode').value = code;
+            executeCouponActivation(code);
+          });
+        }
+      }).catch(err => showNotification("Kamera Error", "Gagal mengakses kamera: " + err, "error"));
+    }
+
+    function stopCamera() {
+      if (html5QrScanner) {
+        html5QrScanner.stop().then(() => {
+          html5QrScanner = null;
+          document.getElementById('scannerSection').classList.add('hidden');
+          document.getElementById('btnStartCameraContainer').classList.remove('hidden');
+        }).catch(console.error);
+      }
+    }
+
+    function submitManualActivation() {
+      const code = document.getElementById('manualCode').value.trim().toUpperCase();
+      if (!code) return showNotification("Input Kosong", "Masukkan kode kupon.", "error");
+      executeCouponActivation(code);
+    }
+
+    async function executeCouponActivation(code) {
+      showLoading(true, "Memvalidasi kupon di Supabase...");
+
+      try {
+        const { data, error } = await supabaseClient.from('peserta_event').select('*').eq('kode_undian', code).maybeSingle();
+        if (error) throw error;
+        if (!data) {
+          showLoading(false);
+          return showScanResultUI('error', 'KODE TIDAK DITEMUKAN', `Kupon ${code} tidak ada di database.`);
+        }
+
+        showLoading(false);
+        showScanResultUI('success', 'KUPON VALID & AKTIF', `Kupon <strong>${code}</strong> atas nama <strong>${data.nama}</strong> (${data.whatsapp}) sah terdaftar.`);
+      } catch (err) {
+        showLoading(false);
+        showScanResultUI('error', 'GAGAL VALIDASI', err.message);
+      }
+    }
+
+    function showScanResultUI(type, title, desc) {
+      const card = document.getElementById('scanResultCard');
+      if (!card) return;
+      card.classList.remove('hidden');
+      document.getElementById('scanResultTitle').innerText = title;
+      document.getElementById('scanResultDesc').innerHTML = desc;
+    }
+
+    function resetScannerUI() {
+      document.getElementById('scanResultCard').classList.add('hidden');
+      document.getElementById('manualCode').value = '';
+    }
+
+    function initOfficerDateFilterUI() {
+      const isEnabled = localStorage.getItem('stk_date_filter_enabled') === 'true';
+      const startDate = localStorage.getItem('stk_date_filter_start') || '';
+      const endDate = localStorage.getItem('stk_date_filter_end') || '';
+
+      const checkEl = document.getElementById('checkFilterUndianTanggal');
+      const inputsWrap = document.getElementById('officerDateFilterInputs');
+      const startInput = document.getElementById('filterUndianStart');
+      const endInput = document.getElementById('filterUndianEnd');
+
+      if (checkEl) checkEl.checked = isEnabled;
+      if (inputsWrap) inputsWrap.classList.toggle('hidden', !isEnabled);
+      if (startInput) startInput.value = startDate;
+      if (endInput) endInput.value = endDate;
+    }
+
+    function toggleOfficerDateFilter(checked) {
+      const inputsWrap = document.getElementById('officerDateFilterInputs');
+      if (inputsWrap) inputsWrap.classList.toggle('hidden', !checked);
+      if (!checked) {
+        localStorage.setItem('stk_date_filter_enabled', 'false');
+        showNotification("Filter Dinonaktifkan", "Pengundian kini menggunakan seluruh kupon aktif dari semua tanggal.", "info");
+      }
+    }
+
+    function saveOfficerDateFilter() {
+      const checkEl = document.getElementById('checkFilterUndianTanggal');
+      const start = document.getElementById('filterUndianStart')?.value;
+      const end = document.getElementById('filterUndianEnd')?.value;
+
+      if (checkEl && checkEl.checked) {
+        if (!start || !end) return showNotification("Tanggal Kosong", "Harap isi tanggal mulai dan tanggal akhir.", "error");
+        if (start > end) return showNotification("Urutan Salah", "Tanggal mulai tidak boleh melebihi tanggal akhir.", "error");
+
+        localStorage.setItem('stk_date_filter_enabled', 'true');
+        localStorage.setItem('stk_date_filter_start', start);
+        localStorage.setItem('stk_date_filter_end', end);
+        showNotification("Pengaturan Disimpan", `Filter aktif: Peserta yang mendaftar dari ${formatDate(start)} s/d ${formatDate(end)} yang berhak terpilih.`, "success");
+      }
+    }
+
+    function isParticipantWithinOfficerDateFilter(created_at) {
+      const isEnabled = localStorage.getItem('stk_date_filter_enabled') === 'true';
+      if (!isEnabled) return true;
+
+      const startDate = localStorage.getItem('stk_date_filter_start');
+      const endDate = localStorage.getItem('stk_date_filter_end');
+      if (!startDate || !endDate || !created_at) return true;
+
+      try {
+        const d = new Date(created_at);
+        if (isNaN(d.getTime())) return true;
+        const formatter = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Jakarta',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        const dateStr = formatter.format(d);
+        return dateStr >= startDate && dateStr <= endDate;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    async function handleDashboardLogin(e) {
+      e.preventDefault();
+      const pwd = document.getElementById('inputDashboardPassword').value;
+      showLoading(true, "Memeriksa kata sandi admin...");
+
+      let isValid = false;
+      try {
+        const { data, error } = await supabaseClient
+          .from('pengaturan_event')
+          .select('value')
+          .eq('key', 'admin_password')
+          .maybeSingle();
+
+        if (!error && data && data.value) {
+          const remotePwd = typeof data.value === 'object' ? data.value.password : data.value;
+          if (remotePwd && pwd === String(remotePwd).trim()) {
+            isValid = true;
+          }
+        }
+      } catch (err) {
+        console.warn("Gagal membaca password dari Supabase:", err);
+      }
+
+      if (!isValid && pwd === 'Surcan2025') {
+        isValid = true;
+      }
+
+      showLoading(false);
+
+      if (isValid) {
+        isDashboardAuthenticated = true;
+        document.getElementById('dashboardAuthOverlay').classList.add('hidden');
+        document.getElementById('authErrorMsg').classList.add('hidden');
+        loadDashboardData();
+      } else {
+        document.getElementById('authErrorMsg').classList.remove('hidden');
+      }
+    }
+
+    async function loadDashboardData() {
+      showLoading(true, "Memuat data dashboard dari Supabase...");
+      try {
+        const { data, error } = await supabaseClient.from('peserta_event').select('*').order('id', { ascending: false });
+        if (error) throw error;
+        allParticipants = data || [];
+        filterDashboardData();
+      } catch (err) {
+        showNotification("Gagal Dashboard", err.message, "error");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function formatDate(dateStr, withTime = false) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      if (!withTime) return `${day}/${month}/${year}`;
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    }
+
+    function formatActivationTime(dateStr) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      return `${day}/${month}/${year} ${hours}.${mins}`;
+    }
+
+    function renderDashboardTable(dataList) {
+      const tbody = document.getElementById('dashboardTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      const totalCount = document.getElementById('dashboardTotalCount');
+      if (totalCount) totalCount.innerText = dataList.length;
+
+      if (dataList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="15" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
+        return;
+      }
+
+      dataList.forEach((row, index) => {
+        const isChecked = selectedParticipantIds.has(row.id);
+        const waClean = (row.whatsapp || '').replace(/[^0-9]/g, '');
+        const waLink = waClean.startsWith('0') ? '62' + waClean.slice(1) : waClean;
+
+        const statusBadge = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-100 text-emerald-700">AKTIF</span>';
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-rose-50/20 transition-colors";
+        tr.innerHTML = `
+          <td class="p-3 text-center">
+            <input type="checkbox" value="${row.id}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow(${row.id}, this)" class="w-4 h-4 accent-rose-500 rounded">
+          </td>
+          <td class="p-3 text-center font-bold text-slate-400">${index + 1}</td>
+          <td class="p-3 whitespace-nowrap text-slate-500">${formatDate(row.created_at, true)}</td>
+          <td class="p-3 whitespace-nowrap font-bold text-slate-800 uppercase">${row.nama || '-'}</td>
+          <td class="p-3 whitespace-nowrap">
+            <a href="https://wa.me/${waLink}" target="_blank" class="text-emerald-600 hover:underline font-bold flex items-center gap-1">
+              ${row.whatsapp || '-'} <i class="fa-brands fa-whatsapp text-sm"></i>
+            </a>
+          </td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${formatDate(row.tanggal_lahir, false)}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${row.jenis_kelamin || '-'}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${row.provinsi || '-'}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${row.kabupaten || '-'}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${row.kecamatan || '-'}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${row.desa || '-'}</td>
+          <td class="p-3 whitespace-nowrap font-mono font-black text-rose-600">${row.kode_undian || '-'}</td>
+          <td class="p-3 whitespace-nowrap">${statusBadge}</td>
+          <td class="p-3 whitespace-nowrap text-slate-500 font-mono text-[11px]">${row.waktu_aktivasi ? formatActivationTime(row.waktu_aktivasi) : '-'}</td>
+          <td class="p-3 text-center whitespace-nowrap">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="openEditModal(${row.id})" class="text-amber-500 hover:text-amber-600 p-1" title="Edit Peserta">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteSingleParticipant(${row.id})" class="text-rose-400 hover:text-rose-600 p-1" title="Hapus Peserta">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      updateSelectedCount();
+    }
+
+    function filterDashboardData() {
+      const query = (document.getElementById('dashboardSearch')?.value || '').toLowerCase().trim();
+
+      const filtered = allParticipants.filter(item => {
+        const matchQuery = !query ||
+          (item.nama && item.nama.toLowerCase().includes(query)) ||
+          (item.whatsapp && item.whatsapp.toLowerCase().includes(query)) ||
+          (item.kode_undian && item.kode_undian.toLowerCase().includes(query)) ||
+          (item.kabupaten && item.kabupaten.toLowerCase().includes(query)) ||
+          (item.kecamatan && item.kecamatan.toLowerCase().includes(query)) ||
+          (item.desa && item.desa.toLowerCase().includes(query));
+        return matchQuery;
+      });
+
+      renderDashboardTable(filtered);
+    }
+
+    function toggleSelectAll(masterCb) {
+      const checkboxes = document.querySelectorAll('#dashboardTableBody input[type="checkbox"]');
+      checkboxes.forEach(cb => {
+        cb.checked = masterCb.checked;
+        const id = parseInt(cb.value, 10);
+        if (masterCb.checked) selectedParticipantIds.add(id);
+        else selectedParticipantIds.delete(id);
+      });
+      updateSelectedCount();
+    }
+
+    function toggleSelectRow(id, cb) {
+      if (cb.checked) selectedParticipantIds.add(id);
+      else selectedParticipantIds.delete(id);
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      const countEl = document.getElementById('selectedCount');
+      const btn = document.getElementById('btnDeleteSelected');
+      const count = selectedParticipantIds.size;
+      if (countEl) countEl.innerText = count;
+
+      if (btn) {
+        if (count > 0) {
+          btn.disabled = false;
+          btn.className = "btn-active px-3.5 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm";
+        } else {
+          btn.disabled = true;
+          btn.className = "btn-active px-3.5 py-2 bg-rose-100 text-rose-400 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-not-allowed";
+        }
+      }
+    }
+
+    function deleteSingleParticipant(id) {
+      const targetId = String(id);
+      const p = allParticipants.find(x => String(x.id) === targetId);
+      const nama = p ? p.nama : 'peserta ini';
+      
+      showConfirmDialog(
+        "Hapus Peserta",
+        `Apakah Anda yakin ingin menghapus <strong>${nama}</strong> dari database?`,
+        async () => {
+          showLoading(true, "Menghapus peserta...");
+          try {
+            if (p && p.kode_undian) {
+              await supabaseClient.from('pemenang_event').delete().eq('kode_undian', p.kode_undian);
+            }
+            const { error } = await supabaseClient.from('peserta_event').delete().eq('id', targetId);
+            if (error) throw error;
+            
+            selectedParticipantIds.delete(id);
+            await loadDashboardData();
+            showNotification("Berhasil", "Peserta berhasil dihapus.", "success");
+          } catch (err) {
+            showNotification("Gagal", err.message, "error");
+          } finally {
+            showLoading(false);
+          }
+        }
+      );
+    }
+
+    function deleteSelectedParticipants() {
+      const count = selectedParticipantIds.size;
+      if (count === 0) return;
+
+      showConfirmDialog(
+        "Hapus Massal Peserta",
+        `Apakah Anda yakin ingin menghapus <strong>${count} peserta terpilih</strong>?`,
+        async () => {
+          showLoading(true, `Menghapus ${count} peserta...`);
+          try {
+            const idsToDelete = Array.from(selectedParticipantIds);
+            const codesToDelete = allParticipants
+              .filter(p => selectedParticipantIds.has(p.id) || selectedParticipantIds.has(Number(p.id)) || selectedParticipantIds.has(String(p.id)))
+              .map(p => p.kode_undian)
+              .filter(Boolean);
+
+            if (codesToDelete.length > 0) {
+              await supabaseClient.from('pemenang_event').delete().in('kode_undian', codesToDelete);
+            }
+
+            const { error } = await supabaseClient.from('peserta_event').delete().in('id', idsToDelete);
+            if (error) throw error;
+            
+            selectedParticipantIds.clear();
+            await loadDashboardData();
+            showNotification("Berhasil", `${count} peserta berhasil dihapus.`, "success");
+          } catch (err) {
+            showNotification("Gagal", err.message, "error");
+          } finally {
+            showLoading(false);
+          }
+        }
+      );
+    }
+
+    function onEditStatusChanged() {
+      const statusEl = document.getElementById('editStatusAktivasi');
+      const petugasInput = document.getElementById('editPetugasAktivasi');
+      const waktuInput = document.getElementById('editWaktuAktivasi');
+      if (!statusEl || !petugasInput || !waktuInput) return;
+
+      if (statusEl.value === 'AKTIF') {
+        if (!petugasInput.value) petugasInput.value = localStorage.getItem('suryacantik_officer_name') || 'Admin Toko';
+        if (!waktuInput.value) {
+          const now = new Date();
+          now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+          waktuInput.value = now.toISOString().slice(0, 16);
+        }
+      } else {
+        petugasInput.value = '';
+        waktuInput.value = '';
+      }
+    }
+
+    function openEditModal(id) {
+      const p = allParticipants.find(x => x.id === id);
+      if (!p) return;
+
+      const setVal = (elemId, val) => {
+        const el = document.getElementById(elemId);
+        if (el) el.value = val !== undefined && val !== null ? val : '';
+      };
+
+      setVal('editId', p.id);
+      setVal('editKodeUndian', p.kode_undian);
+      setVal('editNama', p.nama);
+      setVal('editWhatsapp', p.whatsapp);
+      setVal('editTanggalLahir', p.tanggal_lahir || '');
+      setVal('editJenisKelamin', p.jenis_kelamin || 'Perempuan');
+      setVal('editProvinsi', p.provinsi || '');
+      setVal('editKabupaten', p.kabupaten || '');
+      setVal('editKecamatan', p.kecamatan || '');
+      setVal('editDesa', p.desa || '');
+      setVal('editStatusAktivasi', p.status_aktivasi || 'BELUM AKTIF');
+      setVal('editPetugasAktivasi', p.petugas_aktivasi || '');
+
+      const waktuInput = document.getElementById('editWaktuAktivasi');
+      if (waktuInput) {
+        if (p.waktu_aktivasi) {
+          const d = new Date(p.waktu_aktivasi);
+          if (!isNaN(d.getTime())) {
+            d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+            waktuInput.value = d.toISOString().slice(0, 16);
+          } else {
+            waktuInput.value = '';
+          }
+        } else {
+          waktuInput.value = '';
+        }
+      }
+
+      document.getElementById('editParticipantModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editParticipantModal').classList.add('hidden');
+    }
+
+    async function saveEditedParticipant(e) {
+      e.preventDefault();
+      const id = document.getElementById('editId')?.value;
+      if (!id) return;
+
+      const statusAktivasi = document.getElementById('editStatusAktivasi')?.value || 'BELUM AKTIF';
+      const petugasAktivasi = document.getElementById('editPetugasAktivasi')?.value?.trim() || '';
+      const rawWaktu = document.getElementById('editWaktuAktivasi')?.value;
+
+      let waktuAktivasiIso = null;
+      if (statusAktivasi === 'AKTIF') {
+        waktuAktivasiIso = rawWaktu ? new Date(rawWaktu).toISOString() : new Date().toISOString();
+      }
+
+      const payload = {
+        nama: document.getElementById('editNama')?.value?.trim() || '',
+        whatsapp: document.getElementById('editWhatsapp')?.value?.trim() || '',
+        tanggal_lahir: document.getElementById('editTanggalLahir')?.value || null,
+        jenis_kelamin: document.getElementById('editJenisKelamin')?.value || 'Perempuan',
+        provinsi: document.getElementById('editProvinsi')?.value?.trim() || '',
+        kabupaten: document.getElementById('editKabupaten')?.value?.trim() || '',
+        kecamatan: document.getElementById('editKecamatan')?.value?.trim() || '',
+        desa: document.getElementById('editDesa')?.value?.trim() || '',
+        status_aktivasi: statusAktivasi,
+        petugas_aktivasi: statusAktivasi === 'AKTIF' ? (petugasAktivasi || 'Admin') : null,
+        waktu_aktivasi: waktuAktivasiIso
+      };
+
+      showLoading(true, "Menyimpan perubahan peserta...");
+      try {
+        const { error } = await supabaseClient.from('peserta_event').update(payload).eq('id', id);
+        if (error) throw error;
+        closeEditModal();
+        await loadDashboardData();
+        showNotification("Berhasil", "Data peserta diperbarui.", "success");
+      } catch (err) {
+        showNotification("Gagal", err.message, "error");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function exportToExcel() {
+      if (allParticipants.length === 0) return showNotification("Info", "Tidak ada data untuk diekspor.", "info");
+
+      const exportRows = allParticipants.map((p, idx) => ({
+        "No": idx + 1,
+        "Tanggal Daftar": formatDate(p.created_at, true),
+        "Nama Pelanggan": p.nama,
+        "Nomor WhatsApp": p.whatsapp,
+        "Tanggal Lahir": formatDate(p.tanggal_lahir, false),
+        "Jenis Kelamin": p.jenis_kelamin || '-',
+        "Provinsi": p.provinsi || '-',
+        "Kabupaten/Kota": p.kabupaten || '-',
+        "Kecamatan": p.kecamatan || '-',
+        "Desa/Kelurahan": p.desa || '-',
+        "Nomor Undian": p.kode_undian,
+        "Status Kupon": "AKTIF",
+        "Waktu Aktivasi": p.waktu_aktivasi ? formatActivationTime(p.waktu_aktivasi) : '-'
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(exportRows);
+      worksheet['!cols'] = [
+        { wch: 6 }, { wch: 18 }, { wch: 24 }, { wch: 16 },
+        { wch: 14 }, { wch: 14 }, { wch: 18 }, { wch: 22 },
+        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 14 },
+        { wch: 20 }
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Peserta Undian");
+      XLSX.writeFile(workbook, `Peserta_Surcan_Beauty_Selebration_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
+
+    function downloadExcelTemplate() {
+      const sampleRows = [
+        {
+          "Nama Pelanggan": "Siti Nurhaliza",
+          "Nomor WhatsApp": "081234567890",
+          "Tanggal Lahir": "1998-05-14",
+          "Jenis Kelamin": "Perempuan",
+          "Provinsi": "JAWA TIMUR",
+          "Kabupaten/Kota": "KABUPATEN JEMBER",
+          "Kecamatan": "SUMBERSARI",
+          "Desa/Kelurahan": "TEGAL GEDE",
+          "Nomor Undian": "",
+          "Status Kupon": "AKTIF",
+          "Waktu Aktivasi": "20/03/2026 10.30"
+        }
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(sampleRows);
+      worksheet['!cols'] = [
+        { wch: 22 }, { wch: 18 }, { wch: 15 }, { wch: 15 },
+        { wch: 18 }, { wch: 24 }, { wch: 18 }, { wch: 18 },
+        { wch: 16 }, { wch: 14 }, { wch: 20 }
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Template Peserta");
+      XLSX.writeFile(workbook, "Template_Upload_Peserta_Surcan.xlsx");
+      showNotification("Template Diunduh", "Template Excel berhasil didownload.", "success");
+    }
+
+    function parseExcelDate(val) {
+      if (!val) return null;
+      if (typeof val === 'number') {
+        const d = new Date(Math.round((val - 25569) * 86400 * 1000));
+        return d.toISOString().slice(0, 10);
+      }
+      const str = String(val).trim();
+      if (str.match(/^\d{4}-\d{2}-\d{2}$/)) return str;
+      const parts = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (parts) return `${parts[3]}-${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+      return str;
+    }
+
+    function parseExcelDateTime(val) {
+      if (!val) return null;
+      if (typeof val === 'number') {
+        const d = new Date(Math.round((val - 25569) * 86400 * 1000));
+        return d.toISOString();
+      }
+      const str = String(val).trim();
+      const parsed = new Date(str);
+      if (!isNaN(parsed.getTime())) return parsed.toISOString();
+      return new Date().toISOString();
+    }
+
+    function handleExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          showLoading(true, "Membaca file spreadsheet...");
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+          if (jsonData.length === 0) throw new Error("File Excel kosong.");
+
+          const defaultOfficer = localStorage.getItem('suryacantik_officer_name') || 'Import Excel';
+          const inserts = [];
+          for (const item of jsonData) {
+            const nama = item['Nama Pelanggan'] || item['Nama'];
+            const wa = String(item['Nomor WhatsApp'] || item['WhatsApp'] || '');
+            if (!nama) continue;
+
+            const nextTicket = item['Nomor Undian'] || await generateNextTicketNumber();
+            const statusKupon = (item['Status Kupon'] || 'AKTIF').toUpperCase();
+            
+            let petugasAktivasi = null;
+            let waktuAktivasi = null;
+            if (statusKupon === 'AKTIF') {
+              petugasAktivasi = item['Petugas Aktivasi'] || defaultOfficer;
+              waktuAktivasi = item['Waktu Aktivasi'] ? parseExcelDateTime(item['Waktu Aktivasi']) : new Date().toISOString();
+            }
+
+            inserts.push({
+              public_token: 'UP-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
+              kode_undian: nextTicket,
+              nama: String(nama).trim(),
+              whatsapp: wa.trim(),
+              tanggal_lahir: parseExcelDate(item['Tanggal Lahir']),
+              jenis_kelamin: item['Jenis Kelamin'] || 'Perempuan',
+              provinsi: item['Provinsi'] || '-',
+              kabupaten: item['Kabupaten/Kota'] || '-',
+              kecamatan: item['Kecamatan'] || '-',
+              desa: item['Desa/Kelurahan'] || '-',
+              status_aktivasi: statusKupon,
+              petugas_aktivasi: petugasAktivasi,
+              waktu_aktivasi: waktuAktivasi
+            });
+          }
+
+          const { error } = await supabaseClient.from('peserta_event').insert(inserts);
+          if (error) throw error;
+
+          await loadDashboardData();
+          showNotification("Upload Sukses", `${inserts.length} data berhasil diimpor!`, "success");
+        } catch (err) {
+          showNotification("Gagal Upload", err.message, "error");
+        } finally {
+          event.target.value = '';
+          showLoading(false);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    async function loadLuckyDrawCandidates() {
+      showLoading(true, "Sinkronisasi data undian...");
+      try {
+        const { data: pesertaData, error: errPeserta } = await supabaseClient.from('peserta_event').select('*');
+        if (errPeserta) throw errPeserta;
+
+        const { data: pemenangData, error: errPemenang } = await supabaseClient.from('pemenang_event').select('*').order('hadiah_ke', { ascending: true });
+        if (errPemenang) throw errPemenang;
+
+        allParticipants = pesertaData || [];
+        allWinners = pemenangData || [];
+
+        updateLuckyDrawStats();
+        renderWinnersList();
+      } catch (err) {
+        showNotification("Gagal", err.message, "error");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function getActiveCandidates() {
+      const winnerCodes = new Set(allWinners.map(w => w.kode_undian));
+      const winnerWhatsapps = new Set(allWinners.map(w => w.whatsapp).filter(Boolean));
+      const pool = [];
+
+      allParticipants.forEach(p => {
+        if (p.whatsapp && (winnerWhatsapps.has(p.whatsapp) || allDiscardedWhatsapps.has(p.whatsapp))) return;
+
+        if (p.kode_undian && p.status_aktivasi === 'AKTIF') {
+          if (!winnerCodes.has(p.kode_undian) && !allDiscardedCodes.has(p.kode_undian)) {
+            pool.push({
+              kode_undian: p.kode_undian,
+              nama: p.nama,
+              whatsapp: p.whatsapp,
+              created_at: p.created_at,
+              tipe: 'Kupon Utama'
+            });
+          }
+        }
+      });
+
+      return pool;
+    }
+
+    function getTotalActiveParticipants() {
+      let count = 0;
+      allParticipants.forEach(p => {
+        if (p.kode_undian && p.status_aktivasi === 'AKTIF') count++;
+      });
+      return count;
+    }
+
+    function getTotalInactiveParticipants() {
+      let count = 0;
+      allParticipants.forEach(p => {
+        if (p.kode_undian && p.status_aktivasi !== 'AKTIF') count++;
+      });
+      return count;
+    }
+
+    function getNextPrizeIndex() {
+      const existingPrizes = new Set(allWinners.map(w => w.hadiah_ke));
+      for (let i = 10; i >= 1; i--) {
+        if (!existingPrizes.has(i)) return i;
+      }
+      return null;
+    }
+
+    function updateLuckyDrawStats() {
+      const totalKupon = getTotalActiveParticipants();
+      const belumAktif = getTotalInactiveParticipants();
+      const candidates = getActiveCandidates();
+
+      document.getElementById('statTotalPeserta').innerText = totalKupon;
+      const elBelumAktif = document.getElementById('statBelumAktif');
+      if (elBelumAktif) elBelumAktif.innerText = belumAktif;
+      document.getElementById('statSisaKandidat').innerText = candidates.length;
+      document.getElementById('statTotalPemenang').innerText = `${allWinners.length} / 10`;
+
+      const nextPrize = getNextPrizeIndex();
+      const prizeLabel = document.getElementById('currentPrizeLabel');
+      if (prizeLabel) {
+        if (nextPrize !== null) {
+          if (nextPrize === 1) {
+            prizeLabel.innerText = `SEDANG MENGUNDI: HADIAH UTAMA (HADIAH KE-1) 🏆`;
+          } else {
+            prizeLabel.innerText = `SEDANG MENGUNDI: HADIAH KE-${nextPrize}`;
+          }
+        } else {
+          prizeLabel.innerText = `SEMUA 10 HADIAH SELESAI DIUNDI! 🎉`;
+        }
+      }
+    }
+
+    function startLuckyDraw() {
+      if (isDrawingRunning) return;
+      getAudioContext();
+
+      const nextPrize = getNextPrizeIndex();
+      if (nextPrize === null) return showNotification("Selesai", "Seluruh 10 hadiah telah diundi!", "info");
+
+      const candidates = getActiveCandidates();
+      if (candidates.length === 0) {
+        return showNotification("Kandidat Habis", "Tidak ada kandidat kupon yang tersedia untuk diundi.", "error");
+      }
+
+      // Saring kandidat pemenang berdasarkan filter internal tanggal petugas jika aktif
+      const filteredPool = candidates.filter(c => isParticipantWithinOfficerDateFilter(c.created_at));
+      const eligiblePool = filteredPool.length > 0 ? filteredPool : candidates;
+
+      isDrawingRunning = true;
+      const btn = document.getElementById('btnStartDraw');
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+
+      const displayNumber = document.getElementById('displayNumber');
+      const displayName = document.getElementById('displayName');
+      const pulseIcon = document.getElementById('pulseIcon');
+
+      const totalDuration = drawDurationSeconds * 1000;
+      const slowPhaseStart = totalDuration > 4000 ? Math.max(totalDuration - 5000, totalDuration * 0.5) : totalDuration * 0.5;
+      const startTime = performance.now();
+      const selectedFinalCandidate = eligiblePool[Math.floor(Math.random() * eligiblePool.length)];
+
+      function spinStep() {
+        const now = performance.now();
+        const elapsed = now - startTime;
+
+        if (elapsed >= totalDuration) {
+          isDrawingRunning = false;
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+
+          if (displayNumber) displayNumber.innerText = selectedFinalCandidate.kode_undian;
+          if (displayName) displayName.innerText = selectedFinalCandidate.nama;
+
+          if (pulseIcon) {
+            pulseIcon.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Pemenang Ditemukan!`;
+            pulseIcon.className = "mt-4 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm";
+          }
+
+          currentDrawingCandidate = {
+            candidate: selectedFinalCandidate,
+            hadiah_ke: nextPrize,
+            nama_hadiah: nextPrize === 1 ? 'Hadiah Utama (Grand Prize)' : `Hadiah Ke-${nextPrize}`
+          };
+
+          openWinnerModal();
+          return;
+        }
+
+        const randomPick = candidates[Math.floor(Math.random() * candidates.length)];
+        if (displayNumber) displayNumber.innerText = randomPick.kode_undian;
+        if (displayName) displayName.innerText = randomPick.nama;
+
+        const remainingSeconds = Math.max(1, Math.ceil((totalDuration - elapsed) / 1000));
+        let stepDelay = 45;
+        let tickPitch = 760;
+
+        if (elapsed >= slowPhaseStart) {
+          const slowProgress = (elapsed - slowPhaseStart) / (totalDuration - slowPhaseStart);
+          stepDelay = 45 + Math.pow(slowProgress, 2.4) * 385;
+          tickPitch = 760 - slowProgress * 340;
+          if (pulseIcon) pulseIcon.innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-600 inline-block animate-ping"></span> Melambat... Sisa ${remainingSeconds} Detik`;
+        } else {
+          if (pulseIcon) pulseIcon.innerHTML = `<span class="w-2 h-2 rounded-full bg-pink-500 inline-block animate-ping"></span> Mengundi... Sisa ${remainingSeconds} Detik`;
+        }
+
+        playSpinTick(tickPitch, 0.08);
+        setTimeout(spinStep, stepDelay);
+      }
+
+      spinStep();
+    }
+
+    function openWinnerModal() {
+      if (!currentDrawingCandidate) return;
+      document.getElementById('modalPrizeTitle').innerText = currentDrawingCandidate.nama_hadiah.toUpperCase();
+      document.getElementById('modalWinnerNumber').innerText = currentDrawingCandidate.candidate.kode_undian;
+      document.getElementById('modalWinnerName').innerText = currentDrawingCandidate.candidate.nama;
+      document.getElementById('modalWinnerWa').innerText = currentDrawingCandidate.candidate.whatsapp;
+
+      playVictoryFanfare();
+      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      document.getElementById('winnerModal').classList.remove('hidden');
+    }
+
+    function discardWinner() {
+      playHangusSound();
+      document.getElementById('winnerModal').classList.add('hidden');
+      if (currentDrawingCandidate && currentDrawingCandidate.candidate) {
+        const c = currentDrawingCandidate.candidate;
+        if (c.kode_undian) allDiscardedCodes.add(c.kode_undian);
+        if (c.whatsapp) allDiscardedWhatsapps.add(c.whatsapp);
+        localStorage.setItem('stk_discarded_codes', JSON.stringify([...allDiscardedCodes]));
+        localStorage.setItem('stk_discarded_whatsapps', JSON.stringify([...allDiscardedWhatsapps]));
+      }
+      currentDrawingCandidate = null;
+      document.getElementById('displayNumber').innerText = 'STK-XXXXX';
+      document.getElementById('displayName').innerText = 'Dihanguskan - Gugur dari Undian';
+      updateLuckyDrawStats();
+    }
+
+    async function saveCurrentWinner() {
+      if (!currentDrawingCandidate) return;
+      showLoading(true, "Menyimpan pemenang ke Supabase...");
+
+      const payload = {
+        hadiah_ke: currentDrawingCandidate.hadiah_ke,
+        nama_hadiah: currentDrawingCandidate.nama_hadiah,
+        kode_undian: currentDrawingCandidate.candidate.kode_undian,
+        nama_pemenang: currentDrawingCandidate.candidate.nama,
+        whatsapp: currentDrawingCandidate.candidate.whatsapp
+      };
+
+      try {
+        const { error } = await supabaseClient.from('pemenang_event').insert([payload]);
+        if (error) throw error;
+
+        document.getElementById('winnerModal').classList.add('hidden');
+        currentDrawingCandidate = null;
+
+        await loadLuckyDrawCandidates();
+        showNotification("Berhasil", "Pemenang sah disimpan!", "success");
+      } catch (err) {
+        showNotification("Gagal", err.message, "error");
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function renderWinnersList() {
+      const container = document.getElementById('winnersListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (allWinners.length === 0) {
+        container.innerHTML = `
+          <div class="h-44 flex flex-col items-center justify-center text-center text-slate-400">
+            <i class="fa-solid fa-gift text-2xl text-purple-300 mb-2"></i>
+            <p class="font-bold text-slate-500">Belum Ada Pemenang</p>
+            <p class="text-[10px] text-slate-400">Tekan 'Mulai Undian' untuk mengundi Hadiah ke-10</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Urutan naik: Hadiah ke-10 di paling bawah
+      allWinners.sort((a, b) => (Number(a.hadiah_ke) || 0) - (Number(b.hadiah_ke) || 0));
+
+      allWinners.forEach(w => {
+        const item = document.createElement('div');
+        item.className = "p-3 rounded-2xl bg-gradient-to-r from-purple-50/70 to-pink-50/70 border border-purple-100 flex items-center justify-between shadow-sm";
+        item.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white font-black flex items-center justify-center text-xs flex-shrink-0 shadow-sm">
+              #${w.hadiah_ke}
+            </div>
+            <div class="min-w-0">
+              <span class="text-[10px] font-black text-pink-600 block uppercase leading-tight">${w.nama_hadiah}</span>
+              <h4 class="font-extrabold text-slate-800 text-xs truncate font-mono">${w.kode_undian} - <span class="capitalize font-sans text-purple-900 font-bold">${w.nama_pemenang}</span></h4>
+            </div>
+          </div>
+          <button onclick="deleteWinner('${w.id || ''}', '${w.kode_undian || ''}')" class="text-slate-400 hover:text-rose-500 p-2 text-sm transition" title="Hapus Pemenang">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function deleteWinner(id, kodeUndian = null) {
+      showConfirmDialog(
+        "Hapus Pemenang",
+        "Hapus pemenang ini? Nomor undian dapat diikutsertakan kembali.",
+        async () => {
+          showLoading(true, "Menghapus pemenang...");
+          try {
+            let res;
+            if (id && id !== '' && id !== 'null' && id !== 'undefined') {
+              res = await supabaseClient.from('pemenang_event').delete().eq('id', id);
+            } else if (kodeUndian) {
+              res = await supabaseClient.from('pemenang_event').delete().eq('kode_undian', kodeUndian);
+            }
+            if (res && res.error) throw res.error;
+
+            await loadLuckyDrawCandidates();
+            showNotification("Berhasil", "Pemenang dihapus.", "success");
+          } catch (err) {
+            showNotification("Gagal", err.message, "error");
+          } finally {
+            showLoading(false);
+          }
+        }
+      );
+    }
+
+    function clearAllWinners() {
+      showConfirmDialog(
+        "Reset Seluruh Pemenang",
+        "Hapus semua daftar pemenang? Semua 10 hadiah akan diundi ulang.",
+        async () => {
+          showLoading(true, "Mereset data pemenang...");
+          try {
+            const { error } = await supabaseClient.from('pemenang_event').delete().gte('hadiah_ke', 0);
+            if (error) {
+              await supabaseClient.from('pemenang_event').delete().neq('kode_undian', '');
+            }
+
+            allDiscardedCodes.clear();
+            allDiscardedWhatsapps.clear();
+            localStorage.removeItem('stk_discarded_codes');
+            localStorage.removeItem('stk_discarded_whatsapps');
+
+            allWinners = [];
+            await loadLuckyDrawCandidates();
+            showNotification("Reset Berhasil", "Semua pemenang dibersihkan.", "success");
+          } catch (err) {
+            showNotification("Gagal", err.message, "error");
+          } finally {
+            showLoading(false);
+          }
+        }
+      );
+    }
+
+    function openRulesModal() {
+      const modal = document.getElementById('rulesModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closeRulesModal() {
+      const modal = document.getElementById('rulesModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openDrawSettingsModal() {
+      const modal = document.getElementById('drawSettingsModal');
+      const input = document.getElementById('inputDrawDuration');
+      if (input) input.value = drawDurationSeconds;
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDrawSettingsModal() {
+      const modal = document.getElementById('drawSettingsModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveDrawDuration() {
+      const input = document.getElementById('inputDrawDuration');
+      const val = parseInt(input ? input.value : '10', 10);
+      if (isNaN(val) || val < 1) return showNotification("Durasi Tidak Valid", "Harap masukkan durasi minimal 1 detik.", "error");
+
+      drawDurationSeconds = val;
+      localStorage.setItem('stk_draw_duration', String(val));
+      updateDurationButtonLabel();
+      closeDrawSettingsModal();
+      showNotification("Pengaturan Disimpan", `Durasi undian kini diatur menjadi ${val} detik!`, "success");
+    }
+
+    function updateDurationButtonLabel() {
+      const labelEl = document.getElementById('labelDurationBtn');
+      if (labelEl) labelEl.innerText = `Durasi: ${drawDurationSeconds} Detik`;
+    }
+
+    async function loadProvinces() {
+      const selectProv = document.getElementById('selectProvinsi');
+      if (!selectProv) return;
+      try {
+        const response = await fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+        const provinces = await response.json();
+        selectProv.innerHTML = '<option value="" disabled selected>Pilih Provinsi</option>';
+        provinces.forEach(p => {
+          selectProv.innerHTML += `<option value="${p.name}" data-id="${p.id}">${p.name}</option>`;
+        });
+      } catch (e) {}
+    }
+
+    async function onProvinsiChanged() {
+      const provSelect = document.getElementById('selectProvinsi');
+      const opt = provSelect.options[provSelect.selectedIndex];
+      if (!opt) return;
+      const id = opt.getAttribute('data-id');
+      const kabSelect = document.getElementById('selectKabupaten');
+      kabSelect.disabled = false;
+      kabSelect.innerHTML = '<option value="" disabled selected>Memuat Kabupaten...</option>';
+      try {
+        const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`);
+        const data = await res.json();
+        kabSelect.innerHTML = '<option value="" disabled selected>Pilih Kabupaten/Kota</option>';
+        data.forEach(r => {
+          kabSelect.innerHTML += `<option value="${r.name}" data-id="${r.id}">${r.name}</option>`;
+        });
+      } catch (e) {}
+    }
+
+    async function onKabupatenChanged() {
+      const kabSelect = document.getElementById('selectKabupaten');
+      const opt = kabSelect.options[kabSelect.selectedIndex];
+      if (!opt) return;
+      const id = opt.getAttribute('data-id');
+      const kecSelect = document.getElementById('selectKecamatan');
+      kecSelect.disabled = false;
+      kecSelect.innerHTML = '<option value="" disabled selected>Memuat Kecamatan...</option>';
+      try {
+        const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`);
+        const data = await res.json();
+        kecSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+        data.forEach(d => {
+          kecSelect.innerHTML += `<option value="${d.name}" data-id="${d.id}">${d.name}</option>`;
+        });
+      } catch (e) {}
+    }
+
+    async function onKecamatanChanged() {
+      const kecSelect = document.getElementById('selectKecamatan');
+      const opt = kecSelect.options[kecSelect.selectedIndex];
+      if (!opt) return;
+      const id = opt.getAttribute('data-id');
+      const kelSelect = document.getElementById('selectKelurahan');
+      kelSelect.disabled = false;
+      kelSelect.innerHTML = '<option value="" disabled selected>Memuat Kelurahan...</option>';
+      try {
+        const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`);
+        const data = await res.json();
+        kelSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+        data.forEach(v => {
+          kelSelect.innerHTML += `<option value="${v.name}">${v.name}</option>`;
+        });
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>
